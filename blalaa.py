@@ -32,6 +32,8 @@ fps = 30
 
 all_sprites_list = pygame.sprite.Group()
 
+# List comprehension
+
 ENGINE_FIRE = list([pygame.image.load('jet_fire_{0}.png'.format(i)) for i in range(1, 9)])
 SCALED_ENGINE_FIRE = list([])
 
@@ -279,6 +281,8 @@ class Projectiles(pygame.sprite.Sprite):
 
 projectile_list = pygame.sprite.Group()
 
+# List comprehension!
+
 AST_EXP_SHEETS = list([pygame.image.load('Asteroid_explosions_{0}.png'.format(i)) for i in range(1, 4)])
 ASTEROID_FRAMES = list([pygame.image.load('Asteroid_{0}.png'.format(i)) for i in range(1, 61)])
 EXPLOSION_FRAMES = list([pygame.image.load('Explosion_animation{0}.png'.format(i)) for i in range(1, 34)])
@@ -330,6 +334,7 @@ class Effects(pygame.sprite.Sprite):
                         game_over()
 
 explosion = Effects()
+# Datastructure
 
 effects_list = pygame.sprite.Group()
 effects_list.add(explosion)
@@ -369,6 +374,8 @@ class Asteroids(pygame.sprite.Sprite):
             asteroids_list.add(asteroid)
 
         self.frame += 1
+
+        # Remainder-Division.
         self.frame %= len(ASTEROID_FRAMES)
         self.image = ASTEROID_FRAMES[self.frame]
 
@@ -399,6 +406,7 @@ stars_list = pygame.sprite.Group()
 
 
 def game_over():
+
     text_ToScreen(text='Game Over!')
     pygame.display.update()
     time.sleep(5)
@@ -406,6 +414,7 @@ def game_over():
     player_spaceship.health = player_spaceship.maxhealth
     bgnd.PosY = 0
     for asteroid in asteroids_list:
+        #Remove all sprites in data-structure.
         asteroid.kill()
 
     gameloop()
@@ -488,6 +497,7 @@ def gameloop():
         asteroids_list.update(asteroid.speed)
         projectile_list.update()
 
+        # Collition Detection!
         player_hit_asteroids = pygame.sprite.spritecollide(player_spaceship, asteroids_list, True)
         proj_hit_asteroids = pygame.sprite.groupcollide(asteroids_list, projectile_list, True, True)
 
@@ -512,10 +522,13 @@ def gameloop():
                 asteroids_list.add(asteroid)
 
         if len(asteroids_list) < 3:
-            for i in range(2):
+            for i in range(3):
                 asteroid = Asteroids()
                 asteroid.set_random_attr()
                 asteroids_list.add(asteroid)
+
+
+        # Blitting all Sprites.
 
         screen.fill(deepblue)
         bgnd.setBgnd()
@@ -532,9 +545,9 @@ def gameloop():
         pygame.display.update()
         clock.tick(30)
 
-        if player_spaceship.pause == True:
+        if player_spaceship.pause:
             pause = True
-            while pause == True:
+            while pause:
                 text_ToScreen("PAUSE", color=steelblue)
                 pygame.display.update()
 
