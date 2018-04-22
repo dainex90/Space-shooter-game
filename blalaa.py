@@ -4,6 +4,7 @@ import os
 import random
 import time
 import math
+from enum import Enum
 
 pygame.init()
 black = (0, 0, 0)
@@ -32,13 +33,89 @@ fps = 30
 
 all_sprites_list = pygame.sprite.Group()
 
-# List comprehension
 
+" List Comprehension. "
 ENGINE_FIRE = list([pygame.image.load('jet_fire_{0}.png'.format(i)) for i in range(1, 9)])
 SCALED_ENGINE_FIRE = list([])
 
 for frame in ENGINE_FIRE:
     SCALED_ENGINE_FIRE.append(pygame.transform.smoothscale(frame, (70, 60)))
+
+
+class Game(pygame.sprite.Sprite):
+
+
+    _curGameState =
+    _curLevelState =
+
+    def __init__(self, *args):
+        super().__init__(*args)
+
+    @property
+    def curgamestate(self)
+        return self._curGameState
+
+    @curgamestate.setter
+    def curgamestate(self, newgamestate):
+        self._curGameState = newgamestate
+
+class GameState(Enum):
+
+    mainMenu = 'MainMenu'
+    inGame = 'InGame'
+    pause = 'Pause'
+    exit = 'Exit'
+
+    allGameStates = list([mainMenu, inGame, pause, exit])
+    curgamestate = allGameStates[0]
+
+    def __init__(self, newgamestate, *args):
+        super().__init__(*args)
+
+        self.gamestate = newgamestate
+
+    @property
+    def gamestate(self):
+        """Gets the current game state"""
+        return self.curgamestate
+
+    @gamestate.setter
+    def gamestate(self, newgamestate):
+        """Sets the current game state to another"""
+        try:
+            for gamestates in GameState.allGameStates:
+                if gamestates.name == newgamestate:
+                    self.curgamestate = newgamestate
+
+        except ValueError as err:
+            print(err.args)
+
+
+class LevelState(Enum):
+
+    level1 = 1
+    level2 = 2
+    level3 = 3
+    level4 = 4
+
+    allLevelStates = list([level1, level2, level3, level4])
+    curLevelState = allLevelStates[0]
+
+    def __init__(self, newlevelstate, *args):
+        super().__init__(*args)
+
+        self.levelstate = newlevelstate
+
+    @property
+    def levelstate(self):
+        return self.curLevelState
+
+    @levelstate.setter
+    def levelstate(self, newlevelstate):
+
+        for levelstate in self.allLevelStates:
+            if levelstate.name == newlevelstate:
+                self.curLevelState = newlevelstate
 
 
 class Spaceship(pygame.sprite.Sprite):
@@ -59,13 +136,13 @@ class Spaceship(pygame.sprite.Sprite):
         self.engine_fire = SCALED_ENGINE_FIRE[0]
         self.maxhealth = 3
         self.health = self.maxhealth
-        self.accelFire = False
+        self.accelerationFire = False
         self.frame = 0
         self.score = 0
         self.highscore = 0
         self.pause = False
 
-               #Movement--------------------
+        " MOVEMENT ------------> "
 
         self.forward = False
         self.backward = False
@@ -150,7 +227,7 @@ class Spaceship(pygame.sprite.Sprite):
         self.accelerate_ship()
         self.outside_border_pos()
         screen.blit(self.image, [self.rect.x, self.rect.y])
-        if self.accelFire:
+        if self.accelerationFire:
             self.frame += 1
             self.frame %= len(SCALED_ENGINE_FIRE)
             self.engine_fire = SCALED_ENGINE_FIRE[self.frame]
@@ -159,34 +236,81 @@ class Spaceship(pygame.sprite.Sprite):
     def muzzle_flash_effect(self):
         screen.blit(self.muzzle_flash, (self.rect.centerx - 400, self.rect.y - 325))
 
-player_spaceship = Spaceship()
-player_spaceship.set_image("F5S4.png")
-player_spaceship.center_set_position(half_width, screen_height)
+    def isalive(self):
+        if self.health > 0:
+            return True
+
+        else:
+            return False
 
 
-all_sprites_list.add(player_spaceship)
+player = Spaceship()
+player.set_image("F5S4.png")
+player.center_set_position(half_width, screen_height)
+
+
+all_sprites_list.add(player)
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self):
+
+    all_enemies = pygame.sprite.Group()
+
+    def __init__(self, speed, maxhealth):
         super(Enemy, self).__init__()
         self.orig_image = pygame.image.load('Sp_station.png')
         self.image = pygame.transform.smoothscale(self.orig_image, (150, 150))
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(0, screen_width - self.rect.width)
         self.rect.y = 0 - self.rect.height
-        self.speed = 1
+        self.speed = speed
+        self.maxhealth = maxhealth
+        self.health = self.maxhealth
+        self.timebetweenshooting = 100
 
-    def draw(self):
+    def update(self, *args, **kwargs):
         if bgnd.PosY >= 300:
-            #self.rotation()
             self.rect.y += self.speed
-            screen.blit(self.image, (self.rect.x, self.rect.y))
+            self.timebetweenshooting -= 1
+            if self.isshooting():
+                EnemyProjectile.createprojectile(self.rect.x, self.rect.y, howmany=1)
+                EnemyProjectile.createprojectile(self.rect.x + self.rect.width, self.rect.y, howmany=1)
 
-    #def rotation(self):
-        #self.image = pygame.transform.rotate(self.rect.center, 5)
+            if self.rect.y > screen_height + self.rect.height:
+                self.kill()
+                Enemy.createenemy(speed=3, maxhealth=100, count=1)
 
-enemyShip = Enemy()
+    def setposition(self):
+        self.rect.x = random.randrange(0, (screen_width - self.rect.width))
+        self.rect.y = random.randrange(-1200, -700)
+
+    def rotation(self):
+        self.image = pygame.transform.rotate(self.image, 5)
+
+    def isshooting(self):
+        if self.timebetweenshooting <= 0:
+            self.timebetweenshooting = 100
+            return True
+        else:
+            return False
+
+    def isalive(self):
+        if self.health > 0:
+            return True
+        else:
+            return False
+
+    @classmethod
+    def createenemy(cls, speed, maxhealth, count=1):
+        for i in range(count):
+            enemy = Enemy(speed, maxhealth)
+            enemy.setposition()
+            cls.all_enemies.add(enemy)
+
+    @classmethod
+    def killallenemies(cls):
+        for enemy in cls.all_enemies:
+            enemy.kill()
 
 
 class TileSet(pygame.sprite.Sprite):
@@ -203,6 +327,7 @@ class TileSet(pygame.sprite.Sprite):
         if self.rel_y < screen_height:
             screen.blit(self.image, (0, self.rel_y))
         self.PosY += 0.4
+
 
 bgnd = TileSet()
 
@@ -249,7 +374,7 @@ class EnergyBar(pygame.sprite.Sprite):
                 self.overload = True
         else:
             if self.cooldown > 0:
-                text_ToScreen('Overload!', color=red)
+                texttoscreen('Overload!', color=red)
                 self.cooldown -= 25
             else:
                 self.cooldown = 1000
@@ -257,31 +382,68 @@ class EnergyBar(pygame.sprite.Sprite):
                 self.energyRecharge = 1
                 self.update_bar()
 
-ammo = EnergyBar()
 
-
-class Projectiles(pygame.sprite.Sprite):
-    def __init__(self):
-        super(Projectiles, self).__init__()
+class Projectile(pygame.sprite.Sprite):
+    def __init__(self, posx=0, posy=0):
+        super(Projectile, self).__init__()
 
         self.original_image = pygame.image.load('Proj_1.png')
         self.rotated_image = pygame.transform.rotate(self.original_image, 90)
         self.image = pygame.transform.smoothscale(self.rotated_image, [8, 15])
         self.rect = self.image.get_rect()
-        self.rect.x = 0
-        self.rect.y = 0
+        self.rect.x = posx
+        self.rect.y = posy
         self.rect.centerx = self.rect.x + self.rect.center[0]
         self.rect.centery = self.rect.y + self.rect.center[1]
 
-    def update(self):
-        self.rect.y += -50
-        if self.rect.y < (0 - self.rect.height):
+    def update(self, dir_and_speed):
+        self.rect.y += dir_and_speed
+
+        if self.rect.y < 0 - self.rect.height:
             self.kill()
 
 
-projectile_list = pygame.sprite.Group()
+class EnemyProjectile(Projectile):
 
-# List comprehension!
+    all_projectiles = pygame.sprite.Group()
+
+    def __init__(self, posx, posy):
+        super().__init__(posx, posy)
+
+        self.image = pygame.transform.rotate(self.image, 180)
+
+    @classmethod
+    def createprojectile(cls, posx, posy, howmany):
+        for i in range(howmany):
+            enemy_projectile = EnemyProjectile(posx=posx, posy=posy)
+            enemy_projectile.rect.centerx = posx
+            enemy_projectile.rect.y = posy + (enemy_projectile.rect.height * 2)
+            cls.all_projectiles.add(enemy_projectile)
+
+    def update(self, dir_and_speed):
+        self.rect.y += dir_and_speed
+
+        if self.rect.y > screen_height:
+            self.kill()
+
+
+class PlayerProjectile(Projectile):
+
+    all_projectiles = pygame.sprite.Group()
+
+    def __init__(self, posx, posy):
+        super().__init__(posx, posy)
+
+    @classmethod
+    def createprojectile(cls, posx, posy, howmany):
+        for i in range(howmany):
+            player_projectile = PlayerProjectile(posx=posx, posy=posy)
+            player_projectile.rect.x = posx
+            player_projectile.rect.y = posy
+            cls.all_projectiles.add(player_projectile)
+
+
+" LIST COMPREHENSIONS! "
 
 AST_EXP_SHEETS = list([pygame.image.load('Asteroid_explosions_{0}.png'.format(i)) for i in range(1, 4)])
 ASTEROID_FRAMES = list([pygame.image.load('Asteroid_{0}.png'.format(i)) for i in range(1, 61)])
@@ -292,9 +454,13 @@ for frames in EXPLOSION_FRAMES:
     SCALED_EXPLOSION_FRAMES.append(pygame.transform.smoothscale(frames, (60, 60)))
 
 
-class Effects(pygame.sprite.Sprite):
-    def __init__(self, frame=0):
-        super(Effects, self).__init__()
+class Effect(pygame.sprite.Sprite):
+
+    """" Datastructure """
+    all_effects = pygame.sprite.Group()
+
+    def __init__(self):
+        super(Effect, self).__init__()
 
         self.image = SCALED_EXPLOSION_FRAMES[0]
         self.rect = self.image.get_rect()
@@ -313,12 +479,13 @@ class Effects(pygame.sprite.Sprite):
         self.curimageY = 0
         self.playerexp = False
         self.astexp = False
+        self.enemyexp = False
         self.astPosX = 0
         self.astPosY = 0
         self.sheetType = 0
 
     def ast_exp(self, posX, posY):
-        if self.astexp == True or self.playerexp == True:
+        if self.astexp or self.playerexp or self.enemyexp:
 
             screen.blit(self.asteroidExpframes, (posX, posY),
                         (self.curImageX, self.curimageY, self.singleframe_width, self.singleframe_height))
@@ -330,22 +497,27 @@ class Effects(pygame.sprite.Sprite):
                     self.curimageY %= self.astexp_rect.height
                     self.astexp = False
                     self.playerexp = False
-                    if player_spaceship.health <= 0:
+                    self.enemyexp = False
+                    if player.health <= 0:
                         game_over()
 
-explosion = Effects()
-# Datastructure
 
-effects_list = pygame.sprite.Group()
-effects_list.add(explosion)
+class Explosion(Effect):
+    def __init__(self):
+        super().__init__()
 
 
-class Asteroids(pygame.sprite.Sprite):
+explosion = Effect()
+Effect.all_effects.add(explosion)
+
+
+class Asteroid(pygame.sprite.Sprite):
 
     next_level_count = 0
+    all_asteroids = pygame.sprite.Group()
 
     def __init__(self, xpos=0, ypos=0, start_frame=0):
-        super(Asteroids, self).__init__()
+        super(Asteroid, self).__init__()
 
         self.image = ASTEROID_FRAMES[start_frame]
         self.rect = self.image.get_rect()
@@ -367,64 +539,67 @@ class Asteroids(pygame.sprite.Sprite):
         self.rect.y += speed
 
         if self.rect.y > screen_height + 150:
-            self.reset_position()
-            #Asteroids.next_level_count += 1
-            asteroid = Asteroids()
-            asteroid.set_random_attr()
-            asteroids_list.add(asteroid)
+            self.kill()
+            Asteroid.createasteroid(count=2)
 
         self.frame += 1
-
         # Remainder-Division.
         self.frame %= len(ASTEROID_FRAMES)
         self.image = ASTEROID_FRAMES[self.frame]
 
+    @classmethod
+    def createasteroid(cls, count=1):
+        for i in range(count):
 
-asteroids_list = pygame.sprite.Group()
+            asteroid = Asteroid()
+            asteroid.set_random_attr()
+            cls.all_asteroids.add(asteroid)
+
+    @classmethod
+    def killallasteroids(cls):
+        for asteroid in cls.all_asteroids:
+            asteroid.kill()
 
 
-class Stars(pygame.sprite.Sprite):
+class Star(pygame.sprite.Sprite):
+
+    all_stars = pygame.sprite.Group()
+
     def __init__(self):
-        super(Stars, self).__init__()
+        super(Star, self).__init__()
 
         self.image = pygame.Surface([1, 1])
         self.image.fill(white)
         self.rect = self.image.get_rect()
 
-    @staticmethod
-    def making_star_objects():
+    @classmethod
+    def createstarobjects(cls):
         for i in range(100):
             x_loc = random.randint(0, screen_width - 1)
             y_loc = random.randint(0, screen_height - 1)
-            star = Stars()
+            star = Star()
             star.rect.x = x_loc
             star.rect.y = y_loc
 
-            stars_list.add(star)
-
-stars_list = pygame.sprite.Group()
+            cls.all_stars.add(star)
 
 
 def game_over():
 
-    text_ToScreen(text='Game Over!')
+    texttoscreen(text='Game Over!')
     pygame.display.update()
     time.sleep(5)
-    player_spaceship.score = 0
-    player_spaceship.health = player_spaceship.maxhealth
+    player.score = 0
+    player.health = player.maxhealth
     bgnd.PosY = 0
-    for asteroid in asteroids_list:
-        #Remove all sprites in data-structure.
-        asteroid.kill()
 
+    " Remove all sprites in data-structure/group."
+    Asteroid.killallasteroids()
+    Enemy.killallenemies()
     gameloop()
 
-#def randgen(set_max, objdimension):
 
-    #return random.randrange(0, set_max - objdimension)
-
-
-def text_ToScreen(text, font='spaceport1i.ttf', size=50, color=silver, pos_X=half_width, pos_Y=half_height):
+def texttoscreen(text, font='spaceport1i.ttf', size=50, color=silver, pos_X=half_width, pos_Y=half_height):
 
     font = pygame.font.Font(font, size, bold=True)
     textsurf = font.render(text, True, color)
@@ -434,130 +609,186 @@ def text_ToScreen(text, font='spaceport1i.ttf', size=50, color=silver, pos_X=hal
 
 
 def gameloop():
+
+    gamestate = GameState("InGame")
     ending = False
-    Stars.making_star_objects()
-    asteroid = Asteroids(xpos=750, ypos=-500, start_frame=0)
-    asteroids_list.add(asteroid)
-    all_sprites_list.add(asteroid)
-    while not ending:
+    Star.createstarobjects()
+    asteroid = Asteroid(xpos=750, ypos=-500, start_frame=0)
+    Asteroid.all_asteroids.add(asteroid)
+    enemy_ship = Enemy(speed=4, maxhealth=100)
+    Enemy.all_enemies.add(enemy_ship)
+    ammo = EnergyBar()
 
-        if player_spaceship.velX == 0:
-            player_spaceship.left = False
-            player_spaceship.right = False
+    all_sprites_list.add([asteroid, enemy_ship])
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+    if gamestate.gamestate == "InGame":
 
-            if event.type == pygame.KEYDOWN:
+        if game.curlevelstate == "Level1":
 
-                if event.key == pygame.K_d:
-                    if explosion.playerexp:
-                        player_spaceship.right = False
-                    else:
-                        player_spaceship.right = True
-                        player_spaceship.left = False
+            while not ending:
 
-                if event.key == pygame.K_a:
-                    if explosion.playerexp:
-                        player_spaceship.left = False
-                    else:
-                        player_spaceship.left = True
-                        player_spaceship.right = False
-
-                if event.key == pygame.K_w:
-                    if explosion.playerexp:
-                        player_spaceship.forward = False
-                    else:
-                        player_spaceship.accelFire = True
-                        player_spaceship.forward = True
-                        player_spaceship.backward = False
-
-                if event.key == pygame.K_s:
-                    if explosion.playerexp:
-                        player_spaceship.backward = False
-                    else:
-                        player_spaceship.accelFire = False
-                        player_spaceship.backward = True
-                        player_spaceship.forward = False
-
-                if event.key == pygame.K_SPACE:
-                    if not ammo.overload:
-                        player_spaceship.muzzle_flash_effect()
-                        pygame.display.update()
-                        projectile = Projectiles()
-                        projectile.rect.centerx = player_spaceship.rect.centerx
-                        projectile.rect.bottom = player_spaceship.rect.y - (projectile.rect.height * 2)
-                        projectile_list.add(projectile)
-                        ammo.energyCur -= ammo.energyDrain
-                if event.key == pygame.K_p:
-                    player_spaceship.pause = True
-
-        asteroids_list.update(asteroid.speed)
-        projectile_list.update()
-
-        # Collition Detection!
-        player_hit_asteroids = pygame.sprite.spritecollide(player_spaceship, asteroids_list, True)
-        proj_hit_asteroids = pygame.sprite.groupcollide(asteroids_list, projectile_list, True, True)
-
-        for asteroid in proj_hit_asteroids:
-            player_spaceship.score += 1
-            explosion.sheetType = random.randint(0, 2)
-            explosion.asteroidExpframes = AST_EXP_SHEETS[explosion.sheetType]
-            explosion.astPosX = asteroid.rect.x
-            explosion.astPosY = asteroid.rect.y
-            explosion.astexp = True
-
-        for asteroid in player_hit_asteroids:
-            explosion.asteroidExpframes = AST_EXP_SHEETS[1]
-            explosion.astPosX = player_spaceship.rect.x
-            explosion.astPosY = player_spaceship.rect.y
-            explosion.playerexp = True
-            player_spaceship.accelFire = False
-            player_spaceship.health -= 1
-            for i in range(3):
-                asteroid = Asteroids()
-                asteroid.set_random_attr()
-                asteroids_list.add(asteroid)
-
-        if len(asteroids_list) < 3:
-            for i in range(3):
-                asteroid = Asteroids()
-                asteroid.set_random_attr()
-                asteroids_list.add(asteroid)
-
-
-        # Blitting all Sprites.
-
-        screen.fill(deepblue)
-        bgnd.setBgnd()
-        stars_list.draw(screen)
-        asteroids_list.draw(screen)
-        projectile_list.draw(screen)
-        player_spaceship.draw_ship()
-        player_spaceship.draw_UI()
-        enemyShip.draw()
-        explosion.ast_exp(explosion.astPosX, explosion.astPosY)
-        text_ToScreen(text='Score: {0}'.format(player_spaceship.score), size=12, pos_X=400, pos_Y=15)
-        text_ToScreen(text='Highscore: {0}'.format(player_spaceship.highscore), size=15, color=vegasgold, pos_Y=15)
-        ammo.draw_bar()
-        pygame.display.update()
-        clock.tick(30)
-
-        if player_spaceship.pause:
-            pause = True
-            while pause:
-                text_ToScreen("PAUSE", color=steelblue)
-                pygame.display.update()
+                if player.velX == 0:
+                    player.left = False
+                    player.right = False
 
                 for event in pygame.event.get():
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_p:
-                            player_spaceship.pause = False
-                            pause = False
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        quit()
 
-    pygame.quit()
-    quit()
+                    if event.type == pygame.KEYDOWN:
+
+                        if event.key == pygame.K_ESCAPE:
+                            pygame.quit()
+                            quit()
+
+                        if event.key == pygame.K_d:
+                            if explosion.playerexp:
+                                player.right = False
+                            else:
+                                player.right = True
+                                player.left = False
+
+                        if event.key == pygame.K_a:
+                            if explosion.playerexp:
+                                player.left = False
+                            else:
+                                player.left = True
+                                player.right = False
+
+                        if event.key == pygame.K_w:
+                            if explosion.playerexp:
+                                player.forward = False
+                            else:
+                                player.accelerationFire = True
+                                player.forward = True
+                                player.backward = False
+
+                        if event.key == pygame.K_s:
+                            if explosion.playerexp:
+                                player.backward = False
+                            else:
+                                player.accelerationFire = False
+                                player.backward = True
+                                player.forward = False
+
+                        if event.key == pygame.K_SPACE:
+                            if not ammo.overload:
+                                player.muzzle_flash_effect()
+                                pygame.display.update()
+                                projectile = PlayerProjectile(posx=player.rect.x, posy=player.rect.y)
+                                projectile.rect.centerx = player.rect.centerx
+                                projectile.rect.bottom = player.rect.y - (projectile.rect.height * 2)
+                                PlayerProjectile.all_projectiles.add(projectile)
+                                ammo.energyCur -= ammo.energyDrain
+                        if event.key == pygame.K_p:
+                            player.pause = True
+
+                " UPDATE ALL MOVING SPRITES!   -------------- "
+
+                Enemy.all_enemies.update()
+                Asteroid.all_asteroids.update(asteroid.speed)
+                PlayerProjectile.all_projectiles.update(-50)
+                EnemyProjectile.all_projectiles.update(60)
+
+                " Collition Detection! "
+
+                player_hit_asteroids = pygame.sprite.spritecollide(player, Asteroid.all_asteroids, True)
+                proj_hit_asteroids = pygame.sprite.groupcollide(Asteroid.all_asteroids, PlayerProjectile.all_projectiles, True,
+                                                                True)
+                enemyproj_hit_player = pygame.sprite.spritecollide(player, EnemyProjectile.all_projectiles, False)
+                playerproj_hit_enemies = pygame.sprite.groupcollide(Enemy.all_enemies, PlayerProjectile.all_projectiles, False,
+                                                                    True)
+                player_hit_enemies = pygame.sprite.spritecollide(player, Enemy.all_enemies, True)
+
+                for asteroid in proj_hit_asteroids:
+                    player.score += 1
+                    explosion.sheetType = random.randint(0, 2)
+                    explosion.asteroidExpframes = AST_EXP_SHEETS[explosion.sheetType]
+                    explosion.astPosX = asteroid.rect.x
+                    explosion.astPosY = asteroid.rect.y
+                    explosion.astexp = True
+
+                for enemy in playerproj_hit_enemies:
+                    enemy.health -= 20
+                    if not enemy.isalive():
+                        player.score += 5
+                        explosion.sheetType = random.randint(0, 2)
+                        explosion.asteroidExpframes = AST_EXP_SHEETS[explosion.sheetType]
+                        explosion.astPosX = asteroid.rect.x
+                        explosion.astPosY = asteroid.rect.y
+                        explosion.enemyexp = True
+                        enemy.kill()
+
+                for proj in enemyproj_hit_player:
+                    explosion.asteroidExpframes = AST_EXP_SHEETS[1]
+                    explosion.astPosX = proj.rect.x
+                    explosion.astPosY = proj.rect.y
+                    explosion.playerexp = True
+                    player.accelerationFire = False
+                    player.health -= 1
+                    proj.kill()
+                    if not player.isalive():
+                        game_over()
+
+                for asteroid in player_hit_asteroids:
+                    explosion.asteroidExpframes = AST_EXP_SHEETS[1]
+                    explosion.astPosX = player.rect.x
+                    explosion.astPosY = player.rect.y
+                    explosion.playerexp = True
+                    player.accelerationFire = False
+                    player.health -= 1
+                    Asteroid.createasteroid(count=3)
+
+                for enemy in player_hit_enemies:
+                    explosion.asteroidExpframes = AST_EXP_SHEETS[0]
+                    explosion.astPosX = player.rect.x
+                    explosion.astPosY = player.rect.y
+                    explosion.playerexp = True
+                    player.accelerationFire = False
+                    player.health -= 2
+                    Asteroid.createasteroid(count=3)
+
+                if (Asteroid.all_asteroids.__len__()) < 3:
+                    Asteroid.createasteroid(count=3)
+
+                if (Enemy.all_enemies.__len__()) < 3:
+                    Enemy.createenemy(speed=4, maxhealth=100, count=2)
+
+                " Blitting all Sprites "
+
+                screen.fill(deepblue)
+                bgnd.setBgnd()
+                Star.all_stars.draw(screen)
+                Asteroid.all_asteroids.draw(screen)
+                Enemy.all_enemies.draw(screen)
+                PlayerProjectile.all_projectiles.draw(screen)
+                EnemyProjectile.all_projectiles.draw(screen)
+                player.draw_ship()
+                player.draw_UI()
+                """enemy_ship.draw()
+                enemy_ship.checkenemyposition()"""
+                explosion.ast_exp(explosion.astPosX, explosion.astPosY)
+                texttoscreen(text='Score: {0}'.format(player.score), size=12, pos_X=400, pos_Y=15)
+                texttoscreen(text='Highscore: {0}'.format(player.highscore), size=15, color=vegasgold, pos_Y=15)
+                ammo.draw_bar()
+                pygame.display.update()
+                clock.tick(30)
+
+                if player.pause:
+                    pause = True
+                    while pause:
+                        texttoscreen("PAUSE", color=steelblue)
+                        pygame.display.update()
+
+                        for event in pygame.event.get():
+                            if event.type == pygame.KEYDOWN:
+                                if event.key == pygame.K_p:
+                                    player.pause = False
+                                    pause = False
+
+            pygame.quit()
+            quit()
+
 
 gameloop()
