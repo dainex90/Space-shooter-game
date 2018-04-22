@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/blalaa.py" line="385" />
+    <bookmark url="file://$PROJECT_DIR$/blalaa.py" line="351" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="31add88c-d174-49e1-9069-801a826cc6a8" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/GameTime.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/GameTime.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/danba.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/danba.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blalaa.py" beforeDir="false" afterPath="$PROJECT_DIR$/blalaa.py" afterDir="false" />
     </list>
@@ -28,8 +27,8 @@
       <file leaf-file-name="blalaa.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/blalaa.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="541">
-              <caret line="70" lean-forward="true" selection-start-line="70" selection-end-line="70" />
+            <state relative-caret-position="788">
+              <caret line="762" lean-forward="true" selection-start-line="762" selection-end-line="762" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -37,11 +36,20 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="types.py" pinned="false" current-in-tab="false">
+        <entry file="file://C:/Program Files (x86)/Python36-32/Lib/types.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2397">
+              <caret line="141" selection-start-line="141" selection-end-line="141" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="builtins.py" pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/.PyCharmCE2018.1/system/python_stubs/1402888915/builtins.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="29426">
-              <caret line="3759" column="31" lean-forward="true" selection-start-line="3759" selection-start-column="31" selection-end-line="3759" selection-end-column="31" />
+            <state relative-caret-position="63903">
+              <caret line="3759" column="31" selection-start-line="3759" selection-start-column="31" selection-end-line="3759" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -49,8 +57,8 @@
       <file leaf-file-name="enum.py" pinned="false" current-in-tab="false">
         <entry file="file://C:/Program Files (x86)/Python36-32/Lib/enum.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="834">
-              <caret line="155" column="46" lean-forward="true" selection-start-line="155" selection-start-column="46" selection-end-line="155" selection-end-column="46" />
+            <state relative-caret-position="10047">
+              <caret line="594" selection-start-line="594" selection-end-line="594" />
             </state>
           </provider>
         </entry>
@@ -58,7 +66,7 @@
       <file leaf-file-name="random.py" pinned="false" current-in-tab="false">
         <entry file="file://C:/Program Files (x86)/Python36-32/Lib/random.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="536">
+            <state relative-caret-position="2601">
               <caret line="161" column="31" selection-start-line="161" selection-start-column="31" selection-end-line="161" selection-end-column="31" />
             </state>
           </provider>
@@ -67,8 +75,8 @@
       <file leaf-file-name="sprite.py" pinned="false" current-in-tab="false">
         <entry file="file://C:/Program Files (x86)/Python36-32/Lib/site-packages/pygame/sprite.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="579">
-              <caret line="196" selection-start-line="196" selection-end-line="196" />
+            <state relative-caret-position="5933">
+              <caret line="352" selection-start-line="352" selection-end-line="352" />
             </state>
           </provider>
         </entry>
@@ -95,7 +103,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="186" />
     <option name="y" value="144" />
     <option name="width" value="1932" />
@@ -109,8 +117,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -368,27 +376,27 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="2576" height="1416" extended-state="7" />
+    <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.059889678" />
-      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32942098" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" weight="0.32869565" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3372457" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.16040689" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Python Console" order="7" weight="0.32785603" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.32942098" />
+      <window_info anchor="bottom" id="Python Console" order="9" weight="0.32785603" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.16040689" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="7" weight="0.32785603" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.21674491" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.32785603" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="5" weight="0.21674491" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" id="Data View" order="3" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -403,11 +411,16 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="12" />
+      <option name="time" value="19" />
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="curgamestate" />
+        <watch expression="curlevelstate" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/GameTime.py" />
     <entry file="file://C:/Program Files (x86)/Python36-32/Lib/site-packages/pygame/sprite.py" />
     <entry file="file://$PROJECT_DIR$/blalaa.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -568,36 +581,43 @@
     </entry>
     <entry file="file://C:/Program Files (x86)/Python36-32/Lib/random.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="536">
+        <state relative-caret-position="2601">
           <caret line="161" column="31" selection-start-line="161" selection-start-column="31" selection-end-line="161" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Program Files (x86)/Python36-32/Lib/site-packages/pygame/sprite.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="579">
-          <caret line="196" selection-start-line="196" selection-end-line="196" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Program Files (x86)/Python36-32/Lib/enum.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="834">
-          <caret line="155" column="46" lean-forward="true" selection-start-line="155" selection-start-column="46" selection-end-line="155" selection-end-column="46" />
         </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/.PyCharmCE2018.1/system/python_stubs/1402888915/builtins.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="29426">
-          <caret line="3759" column="31" lean-forward="true" selection-start-line="3759" selection-start-column="31" selection-end-line="3759" selection-end-column="31" />
+        <state relative-caret-position="63903">
+          <caret line="3759" column="31" selection-start-line="3759" selection-start-column="31" selection-end-line="3759" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files (x86)/Python36-32/Lib/site-packages/pygame/sprite.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5933">
+          <caret line="352" selection-start-line="352" selection-end-line="352" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files (x86)/Python36-32/Lib/enum.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="10047">
+          <caret line="594" selection-start-line="594" selection-end-line="594" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files (x86)/Python36-32/Lib/types.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2397">
+          <caret line="141" selection-start-line="141" selection-end-line="141" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/blalaa.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="541">
-          <caret line="70" lean-forward="true" selection-start-line="70" selection-end-line="70" />
+        <state relative-caret-position="788">
+          <caret line="762" lean-forward="true" selection-start-line="762" selection-end-line="762" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>

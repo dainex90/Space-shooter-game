@@ -4,6 +4,7 @@
       <w>addenemy</w>
       <w>addprojectile</w>
       <w>addptojectile</w>
+      <w>astexpsound</w>
       <w>blitting</w>
       <w>checkenemyposition</w>
       <w>collition</w>
@@ -14,11 +15,13 @@
       <w>createprojectilesandshoot</w>
       <w>createstarobjects</w>
       <w>curgamestate</w>
+      <w>curlevel</w>
       <w>curlevelstate</w>
       <w>datastructure</w>
       <w>datastructures</w>
       <w>enemyexp</w>
       <w>enemyproj</w>
+      <w>expl</w>
       <w>gamestate</w>
       <w>gamestates</w>
       <w>getcurgamestate</w>
@@ -30,13 +33,21 @@
       <w>killallenemies</w>
       <w>lala</w>
       <w>levelstate</w>
+      <w>mech</w>
       <w>newgamestate</w>
       <w>newlevelstate</w>
+      <w>newspeed</w>
+      <w>nixenofx</w>
+      <w>overloadsoundfx</w>
       <w>playerproj</w>
       <w>posx</w>
       <w>resetposition</w>
       <w>setcurgamestate</w>
+      <w>setlevel</w>
       <w>setposition</w>
+      <w>soundeffect</w>
+      <w>soundfx</w>
+      <w>studiomandragore</w>
       <w>texttoscreen</w>
       <w>timebetweenshooting</w>
     </words>

@@ -6,6 +6,8 @@ import time
 import math
 from enum import Enum
 
+
+pygame.mixer.pre_init(44100, 16, 2, 4096)
 pygame.init()
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -42,81 +44,32 @@ for frame in ENGINE_FIRE:
     SCALED_ENGINE_FIRE.append(pygame.transform.smoothscale(frame, (70, 60)))
 
 
-class Game(pygame.sprite.Sprite):
+class States(Enum):
+
+    def __init__(self, *args):
+        super(States, self).__init__()
 
 
-    _curGameState =
-    _curLevelState =
+class GameStates(States):
+
+    MainMenu = "MainMenu"
+    InGame = "InGame"
+    Pause = "Pause"
+    Exit = "Exit"
 
     def __init__(self, *args):
         super().__init__(*args)
 
-    @property
-    def curgamestate(self)
-        return self._curGameState
 
-    @curgamestate.setter
-    def curgamestate(self, newgamestate):
-        self._curGameState = newgamestate
+class LevelStates(States):
 
-class GameState(Enum):
-
-    mainMenu = 'MainMenu'
-    inGame = 'InGame'
-    pause = 'Pause'
-    exit = 'Exit'
-
-    allGameStates = list([mainMenu, inGame, pause, exit])
-    curgamestate = allGameStates[0]
-
-    def __init__(self, newgamestate, *args):
+    Level1 = "Level1"
+    Level2 = "Level2"
+    Level3 = "Level3"
+    
+    def __init__(self, *args):
         super().__init__(*args)
-
-        self.gamestate = newgamestate
-
-    @property
-    def gamestate(self):
-        """Gets the current game state"""
-        return self.curgamestate
-
-    @gamestate.setter
-    def gamestate(self, newgamestate):
-        """Sets the current game state to another"""
-        try:
-            for gamestates in GameState.allGameStates:
-                if gamestates.name == newgamestate:
-                    self.curgamestate = newgamestate
-
-        except ValueError as err:
-            print(err.args)
-
-
-class LevelState(Enum):
-
-    level1 = 1
-    level2 = 2
-    level3 = 3
-    level4 = 4
-
-    allLevelStates = list([level1, level2, level3, level4])
-    curLevelState = allLevelStates[0]
-
-    def __init__(self, newlevelstate, *args):
-        super().__init__(*args)
-
-        self.levelstate = newlevelstate
-
-    @property
-    def levelstate(self):
-        return self.curLevelState
-
-    @levelstate.setter
-    def levelstate(self, newlevelstate):
-
-        for levelstate in self.allLevelStates:
-            if levelstate.name == newlevelstate:
-                self.curLevelState = newlevelstate
-
+        
 
 class Spaceship(pygame.sprite.Sprite):
 
@@ -141,6 +94,9 @@ class Spaceship(pygame.sprite.Sprite):
         self.score = 0
         self.highscore = 0
         self.pause = False
+        self.isshooting = False
+        self.idling_engine_soundfx = pygame.mixer.Sound(file='33503__cosmicd__engine-hum-new.wav')
+        self.shoot_soundfx = pygame.mixer.Sound(file='368736__fins__shoot-5.wav')
 
         " MOVEMENT ------------> "
 
@@ -149,13 +105,13 @@ class Spaceship(pygame.sprite.Sprite):
         self.left = False
         self.right = False
 
-        self.top_speed = 7
-        self.current_speed = 0
-        self.acceleration = 0.2
+        self.cur_velocity_x = 0
+        self.cur_velocity_y = 0
+        self.acceleration = 0.3
         self.deceleration = 0.3
-        self.turn_acceleration = 0.5
-        self.max_velX = 16
-        self.velX = 0
+        self.turn_acceleration = 0.7
+        self.max_velocity_x = 12
+        self.max_velocity_y = 6
 
     def transform_image(self):
         self.image = pygame.transform.smoothscale(self.image, (65, 65))
@@ -194,33 +150,33 @@ class Spaceship(pygame.sprite.Sprite):
             self.rect.top = 0
 
     def setMax_Velocity_y(self, dir):
-        if abs(self.current_speed) > self.top_speed:
-            self.current_speed = (self.top_speed * dir)
+        if abs(self.cur_velocity_y) > self.max_velocity_y:
+            self.cur_velocity_y = (self.max_velocity_y * dir)
 
     def setMax_Velocity_x(self, dir):
-        if abs(self.velX) > self.max_velX:
-            self.velX = (self.max_velX * dir)
+        if abs(self.cur_velocity_x) > self.max_velocity_x:
+            self.cur_velocity_x = (self.max_velocity_x * dir)
 
     def accelerate_ship(self,):
 
         if self.forward:
-            self.current_speed -= self.acceleration
-            self.rect.y += self.current_speed
+            self.cur_velocity_y -= self.acceleration
+            self.rect.y += self.cur_velocity_y
             self.setMax_Velocity_y(dir=-1)
 
         if self.backward:
-            self.current_speed += self.deceleration
-            self.rect.y += self.current_speed
+            self.cur_velocity_y += self.deceleration
+            self.rect.y += self.cur_velocity_y
             self.setMax_Velocity_y(dir=1)
 
         if self.left:
-            self.velX -= self.turn_acceleration
-            self.rect.x += self.velX
+            self.cur_velocity_x -= self.turn_acceleration
+            self.rect.x += self.cur_velocity_x
             self.setMax_Velocity_x(dir=-1)
 
         if self.right:
-            self.velX += self.turn_acceleration
-            self.rect.x += self.velX
+            self.cur_velocity_x += self.turn_acceleration
+            self.rect.x += self.cur_velocity_x
             self.setMax_Velocity_x(dir=1)
 
     def draw_ship(self):
@@ -234,7 +190,10 @@ class Spaceship(pygame.sprite.Sprite):
             screen.blit(self.engine_fire, (self.rect.centerx - 34, self.rect.bottom))
 
     def muzzle_flash_effect(self):
-        screen.blit(self.muzzle_flash, (self.rect.centerx - 400, self.rect.y - 325))
+        if self.isshooting:
+            screen.blit(self.muzzle_flash, (self.rect.centerx - 400, self.rect.y - 325))
+            self.shoot_soundfx.play(fade_ms=100)
+            self.isshooting = False
 
     def isalive(self):
         if self.health > 0:
@@ -256,7 +215,7 @@ class Enemy(pygame.sprite.Sprite):
 
     all_enemies = pygame.sprite.Group()
 
-    def __init__(self, speed, maxhealth):
+    def __init__(self, speed, maxhealth, timebetweenshooting):
         super(Enemy, self).__init__()
         self.orig_image = pygame.image.load('Sp_station.png')
         self.image = pygame.transform.smoothscale(self.orig_image, (150, 150))
@@ -266,30 +225,33 @@ class Enemy(pygame.sprite.Sprite):
         self.speed = speed
         self.maxhealth = maxhealth
         self.health = self.maxhealth
-        self.timebetweenshooting = 100
+        self.timebetweenshooting = timebetweenshooting
+        self.shoot_soundfx = pygame.mixer.Sound(file='391635__edo333__sci-fi-laser-gun.wav')
 
     def update(self, *args, **kwargs):
         if bgnd.PosY >= 300:
             self.rect.y += self.speed
             self.timebetweenshooting -= 1
             if self.isshooting():
+                self.shoot_soundfx.play(fade_ms=300)
                 EnemyProjectile.createprojectile(self.rect.x, self.rect.y, howmany=1)
                 EnemyProjectile.createprojectile(self.rect.x + self.rect.width, self.rect.y, howmany=1)
 
             if self.rect.y > screen_height + self.rect.height:
                 self.kill()
-                Enemy.createenemy(speed=3, maxhealth=100, count=1)
+                newspeed = random.randint(3, 6)
+                Enemy.createenemy(speed=newspeed, maxhealth=100, timebetweenshooting=30, count=1)
 
     def setposition(self):
         self.rect.x = random.randrange(0, (screen_width - self.rect.width))
-        self.rect.y = random.randrange(-1200, -700)
+        self.rect.y = random.randrange(-1200, -600)
 
     def rotation(self):
         self.image = pygame.transform.rotate(self.image, 5)
 
     def isshooting(self):
-        if self.timebetweenshooting <= 0:
-            self.timebetweenshooting = 100
+        if self.timebetweenshooting <= 0 and self.rect.bottom > self.rect.height:
+            self.timebetweenshooting = 30
             return True
         else:
             return False
@@ -301,9 +263,9 @@ class Enemy(pygame.sprite.Sprite):
             return False
 
     @classmethod
-    def createenemy(cls, speed, maxhealth, count=1):
+    def createenemy(cls, speed, maxhealth, timebetweenshooting, count=1):
         for i in range(count):
-            enemy = Enemy(speed, maxhealth)
+            enemy = Enemy(speed, maxhealth, timebetweenshooting)
             enemy.setposition()
             cls.all_enemies.add(enemy)
 
@@ -347,6 +309,8 @@ class EnergyBar(pygame.sprite.Sprite):
         self.color = green
         self.overload = False
         self.cooldown = 1000
+        print(os.getcwd())  # Log this line.
+        self.overload_soundfx = pygame.mixer.Sound('354049__pauldihor__gun-fire-for-futuristic-game.wav')
 
     def draw_bar(self):
         self.update_bar()
@@ -374,6 +338,8 @@ class EnergyBar(pygame.sprite.Sprite):
                 self.overload = True
         else:
             if self.cooldown > 0:
+
+                self.overload_soundfx.play()
                 texttoscreen('Overload!', color=red)
                 self.cooldown -= 25
             else:
@@ -524,7 +490,8 @@ class Asteroid(pygame.sprite.Sprite):
         self.rect.x = xpos
         self.rect.y = ypos
         self.frame = start_frame
-        self.speed = 4
+        self.speed = random.randint(3, 6)
+        self.sound_effect = pygame.mixer.Sound(file='244345__willlewis__musket-explosion.wav')
 
     def set_random_attr(self):
         self.reset_position()
@@ -535,15 +502,15 @@ class Asteroid(pygame.sprite.Sprite):
         self.rect.y = random.randrange(-900, -400)
         self.rect.x = random.randrange(0, (screen_width - self.rect.width))
 
-    def update(self, speed):
-        self.rect.y += speed
+    def update(self):
+        self.rect.y += self.speed
 
         if self.rect.y > screen_height + 150:
             self.kill()
             Asteroid.createasteroid(count=2)
 
         self.frame += 1
-        # Remainder-Division.
+        " Remainder-Division."
         self.frame %= len(ASTEROID_FRAMES)
         self.image = ASTEROID_FRAMES[self.frame]
 
@@ -586,6 +553,7 @@ class Star(pygame.sprite.Sprite):
 
 def game_over():
 
+    player.idling_engine_soundfx.stop()
     texttoscreen(text='Game Over!')
     pygame.display.update()
     time.sleep(5)
@@ -609,25 +577,37 @@ def texttoscreen(text, font='spaceport1i.ttf', size=50, color=silver, pos_X=half
 
 
 def gameloop():
-
-    gamestate = GameState("InGame")
+    player.idling_engine_soundfx.set_volume(0.1)
+    player.idling_engine_soundfx.play(loops=-1)
+    curgamestate = GameStates.InGame.name
+    curlevelstate = LevelStates.Level1.name
     ending = False
     Star.createstarobjects()
     asteroid = Asteroid(xpos=750, ypos=-500, start_frame=0)
     Asteroid.all_asteroids.add(asteroid)
-    enemy_ship = Enemy(speed=4, maxhealth=100)
+    enemy_ship = Enemy(speed=4, maxhealth=100, timebetweenshooting=30)
     Enemy.all_enemies.add(enemy_ship)
     ammo = EnergyBar()
 
     all_sprites_list.add([asteroid, enemy_ship])
 
-    if gamestate.gamestate == "InGame":
+    if curgamestate == GameStates.MainMenu.name:
+        
+        "You Are in Main Menu!"
+        "..."
 
-        if game.curlevelstate == "Level1":
+    elif curgamestate == GameStates.InGame.name:
 
+        "You are InGame!!"
+        "..." \
+
+        "WHAT LEVEL? ->"
+        if curlevelstate == LevelStates.Level1.name:
+
+            " LEVEL 1 HERE "
             while not ending:
 
-                if player.velX == 0:
+                if player.cur_velocity_x == 0:
                     player.left = False
                     player.right = False
 
@@ -674,8 +654,7 @@ def gameloop():
 
                         if event.key == pygame.K_SPACE:
                             if not ammo.overload:
-                                player.muzzle_flash_effect()
-                                pygame.display.update()
+                                player.isshooting = True
                                 projectile = PlayerProjectile(posx=player.rect.x, posy=player.rect.y)
                                 projectile.rect.centerx = player.rect.centerx
                                 projectile.rect.bottom = player.rect.y - (projectile.rect.height * 2)
@@ -684,10 +663,13 @@ def gameloop():
                         if event.key == pygame.K_p:
                             player.pause = True
 
+                    """if event.type == pygame.KEYUP:
+                        if event.key == pygame.K_w:
+                            player.acceleration_sound.stop()"""
                 " UPDATE ALL MOVING SPRITES!   -------------- "
 
                 Enemy.all_enemies.update()
-                Asteroid.all_asteroids.update(asteroid.speed)
+                Asteroid.all_asteroids.update()
                 PlayerProjectile.all_projectiles.update(-50)
                 EnemyProjectile.all_projectiles.update(60)
 
@@ -702,6 +684,8 @@ def gameloop():
                 player_hit_enemies = pygame.sprite.spritecollide(player, Enemy.all_enemies, True)
 
                 for asteroid in proj_hit_asteroids:
+                    asteroid.sound_effect.set_volume(1.0)
+                    asteroid.sound_effect.play()
                     player.score += 1
                     explosion.sheetType = random.randint(0, 2)
                     explosion.asteroidExpframes = AST_EXP_SHEETS[explosion.sheetType]
@@ -750,10 +734,11 @@ def gameloop():
                     Asteroid.createasteroid(count=3)
 
                 if (Asteroid.all_asteroids.__len__()) < 3:
-                    Asteroid.createasteroid(count=3)
+                    Asteroid.createasteroid(count=2)
 
                 if (Enemy.all_enemies.__len__()) < 3:
-                    Enemy.createenemy(speed=4, maxhealth=100, count=2)
+                    newspeed = random.randint(3, 6)
+                    Enemy.createenemy(speed=newspeed, maxhealth=100, timebetweenshooting=30, count=2)
 
                 " Blitting all Sprites "
 
@@ -766,6 +751,7 @@ def gameloop():
                 EnemyProjectile.all_projectiles.draw(screen)
                 player.draw_ship()
                 player.draw_UI()
+                player.muzzle_flash_effect()
                 """enemy_ship.draw()
                 enemy_ship.checkenemyposition()"""
                 explosion.ast_exp(explosion.astPosX, explosion.astPosY)
@@ -778,12 +764,14 @@ def gameloop():
                 if player.pause:
                     pause = True
                     while pause:
+                        player.idling_engine_soundfx.stop()
                         texttoscreen("PAUSE", color=steelblue)
                         pygame.display.update()
 
                         for event in pygame.event.get():
                             if event.type == pygame.KEYDOWN:
                                 if event.key == pygame.K_p:
+                                    player.idling_engine_soundfx.play(loops=-1)
                                     player.pause = False
                                     pause = False
 
