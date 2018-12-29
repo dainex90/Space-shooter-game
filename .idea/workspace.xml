@@ -4,7 +4,10 @@
     <bookmark url="file://$PROJECT_DIR$/Classes/Main.py" line="222" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="31add88c-d174-49e1-9069-801a826cc6a8" name="Default" comment="">
+    <list default="true" id="31add88c-d174-49e1-9069-801a826cc6a8" name="Default" comment="Created separate modules containing classes/methods.">
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Classes/Spaceship.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Classes/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/GameTime.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/GameTime.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
@@ -27,8 +30,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Classes/Main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+            <state relative-caret-position="170">
+              <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
               <folding>
                 <element signature="e#0#6#0" expanded="true" />
               </folding>
@@ -359,7 +362,7 @@
       <window_info anchor="bottom" id="Run" order="2" weight="0.15978177" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
-      <window_info anchor="bottom" id="Debug" order="5" visible="true" weight="0.30992195" />
+      <window_info anchor="bottom" id="Debug" order="5" weight="0.30992195" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32942098" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" weight="0.32869565" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32942098" />
@@ -446,8 +449,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Classes/Main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        <state relative-caret-position="170">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
           <folding>
             <element signature="e#0#6#0" expanded="true" />
           </folding>
