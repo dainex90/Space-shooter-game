@@ -1,12 +1,15 @@
 
-from _Content.Main import *
-from _Content.fx import Projectile
+from Content import Main
+from Content import Config
+from .Config import Cfg
+from Content.fx import Projectile
+import pygame
 
 
 class SpaceShip(pygame.sprite.Sprite):
 
-    def __init__(self, width=30, height=30, color=white):
-        super(SpaceShip, self).__init__()
+    def __init__(self, width=30, height=30, color=Config.Cfg.white):
+        super().__init__()
 
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
@@ -16,9 +19,10 @@ class SpaceShip(pygame.sprite.Sprite):
         self.rect.centerx = self.rect.x + self.rect.center[0]
         self.rect.centery = self.rect.y + self.rect.center[1]
         self.UI_image = pygame.transform.smoothscale(self.image, (30, 30))
-        self.muzzle_flash = pygame.image.load('Ship_muzzle_flash.png').convert()
-        self.muzzle_flash.set_colorkey(black)
-        self.engine_fire = SCALED_ENGINE_FIRE[0]
+        self.muzzle_flash = pygame.image.load(R'C:\Users\danba\PycharmProjects\Space-shooter-game\Sprites'
+                                              R'\Ship_muzzle_flash.png').convert()
+        self.muzzle_flash.set_colorkey(Config.Cfg.black)
+        "self.engine_fire = SCALED_ENGINE_FIRE[0]"
         self.maxhealth = 3
         self.health = self.maxhealth
         self.accelerationFire = False
@@ -27,8 +31,11 @@ class SpaceShip(pygame.sprite.Sprite):
         self.highscore = 0
         self.pause = False
         self.isshooting = False
-        self.idling_engine_soundfx = pygame.mixer.Sound(file='33503__cosmicd__engine-hum-new.wav')
-        self.shoot_soundfx = pygame.mixer.Sound(file='368736__fins__shoot-5.wav')
+        self.idling_engine_soundfx = pygame.mixer.Sound(file=R'C:\Users\danba\PycharmProjects\Space-shooter-game'
+                                                             R'\sound_fx'
+                                                             R'\33503__cosmicd__engine-hum-new.wav')
+        self.shoot_soundfx = pygame.mixer.Sound(file=R'C:\Users\danba\PycharmProjects\Space-shooter-game'
+                                                     R'\sound_fx\368736__fins__shoot-5.wav')
 
         " MOVEMENT ------------> "
 
@@ -62,22 +69,22 @@ class SpaceShip(pygame.sprite.Sprite):
     def draw_UI(self):
 
         if self.health == self.maxhealth:
-            screen.blit(self.UI_image, (half_width/10, 650))
-            screen.blit(self.UI_image, (half_width/7, 650))
-            screen.blit(self.UI_image, (half_width/5.5, 650))
+            Cfg.screen.blit(self.UI_image, (Cfg.half_width/10, 650))
+            Cfg.screen.blit(self.UI_image, (Cfg.half_width/7, 650))
+            Cfg.screen.blit(self.UI_image, (Cfg.half_width/5.5, 650))
         elif self.health == 2:
-            screen.blit(self.UI_image, (half_width / 10, 650))
-            screen.blit(self.UI_image, (half_width / 7, 650))
+            Cfg.screen.blit(self.UI_image, (Cfg.half_width / 10, 650))
+            Cfg.screen.blit(self.UI_image, (Cfg.half_width / 7, 650))
         elif self.health == 1:
-            screen.blit(self.UI_image, (half_width / 10, 650))
+            Cfg.screen.blit(self.UI_image, (Cfg.half_width / 10, 650))
 
     def outside_border_pos(self):
-        if self.rect.x > screen_width:
+        if self.rect.x > Cfg.screen_width:
             self.rect.x = (0 - self.rect.width)
         if self.rect.x < (0 - self.rect.width):
-            self.rect.x = screen_width
-        if self.rect.bottom > screen_height:
-            self.rect.bottom = screen_height
+            self.rect.x = Cfg.screen_width
+        if self.rect.bottom > Cfg.screen_height:
+            self.rect.bottom = Cfg.screen_height
         if self.rect.top < 0:
             self.rect.top = 0
 
@@ -114,16 +121,16 @@ class SpaceShip(pygame.sprite.Sprite):
     def draw_ship(self):
         self.accelerate_ship()
         self.outside_border_pos()
-        screen.blit(self.image, [self.rect.x, self.rect.y])
+        Cfg.screen.blit(self.image, [self.rect.x, self.rect.y])
         if self.accelerationFire:
             self.frame += 1
-            self.frame %= len(SCALED_ENGINE_FIRE)
-            self.engine_fire = SCALED_ENGINE_FIRE[self.frame]
-            screen.blit(self.engine_fire, (self.rect.centerx - 34, self.rect.bottom))
+            self.frame %= len(Main.SCALED_ENGINE_FIRE)
+            self.engine_fire = Main.SCALED_ENGINE_FIRE[self.frame]
+            Cfg.screen.blit(self.engine_fire, (self.rect.centerx - 34, self.rect.bottom))
 
     def muzzle_flash_effect(self):
         if self.isshooting:
-            screen.blit(self.muzzle_flash, (self.rect.centerx - 400, self.rect.y - 325))
+            Cfg.screen.blit(self.muzzle_flash, (self.rect.centerx - 400, self.rect.y - 325))
             self.shoot_soundfx.play(fade_ms=100)
             self.isshooting = False
 
@@ -139,7 +146,7 @@ class PlayerProjectile(Projectile):
     all_projectiles = pygame.sprite.Group()
 
     def __init__(self, posx, posy):
-        super().__init__(posx, posy)
+        super(PlayerProjectile, self).__init__(posx, posy)
 
     @classmethod
     def createprojectile(cls, posx, posy, howmany):

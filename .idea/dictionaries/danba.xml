@@ -17,6 +17,7 @@
       <w>curgamestate</w>
       <w>curlevel</w>
       <w>curlevelstate</w>
+      <w>danba</w>
       <w>datastructure</w>
       <w>datastructures</w>
       <w>enemyexp</w>
@@ -39,17 +40,21 @@
       <w>newspeed</w>
       <w>nixenofx</w>
       <w>overloadsoundfx</w>
+      <w>pauldihor</w>
       <w>playerproj</w>
       <w>posx</w>
+      <w>pygame</w>
       <w>resetposition</w>
       <w>setcurgamestate</w>
       <w>setlevel</w>
       <w>setposition</w>
+      <w>smoothscale</w>
       <w>soundeffect</w>
       <w>soundfx</w>
       <w>studiomandragore</w>
       <w>texttoscreen</w>
       <w>timebetweenshooting</w>
+      <w>willlewis</w>
     </words>
   </dictionary>
 </component>

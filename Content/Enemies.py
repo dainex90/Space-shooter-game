@@ -1,7 +1,11 @@
 
 
-from _Content.Main import *
-from _Content.fx import Projectile
+from Content import Main
+from Content import Config
+from.Config import Cfg
+from .fx import Projectile
+import pygame
+import random
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -10,19 +14,20 @@ class Enemy(pygame.sprite.Sprite):
 
     def __init__(self, speed, maxhealth, timebetweenshooting):
         super(Enemy, self).__init__()
-        self.orig_image = pygame.image.load('Sp_station.png')
+        self.orig_image = pygame.image.load(R'C:\Users\danba\PycharmProjects\Space-shooter-game\Sprites\Sp_station.png')
         self.image = pygame.transform.smoothscale(self.orig_image, (150, 150))
         self.rect = self.image.get_rect()
-        self.rect.x = random.randrange(0, screen_width - self.rect.width)
+        self.rect.x = random.randrange(0, Config.Cfg.screen_width - self.rect.width)
         self.rect.y = 0 - self.rect.height
         self.speed = speed
         self.maxhealth = maxhealth
         self.health = self.maxhealth
         self.timebetweenshooting = timebetweenshooting
-        self.shoot_soundfx = pygame.mixer.Sound(file='391635__edo333__sci-fi-laser-gun.wav')
+        self.shoot_soundfx = pygame.mixer.Sound(file=R'C:\Users\danba\PycharmProjects\Space-shooter-game\sound_fx'
+                                                     R'\391635__edo333__sci-fi-laser-gun.wav')
 
     def update(self, *args, **kwargs):
-        if bgnd.PosY >= 300:
+        if Main.bgnd.PosY >= 300:
             self.rect.y += self.speed
             self.timebetweenshooting -= 1
             if self.isshooting():
@@ -30,13 +35,13 @@ class Enemy(pygame.sprite.Sprite):
                 EnemyProjectile.createprojectile(self.rect.x, self.rect.y, howmany=1)
                 EnemyProjectile.createprojectile(self.rect.x + self.rect.width, self.rect.y, howmany=1)
 
-            if self.rect.y > screen_height + self.rect.height:
+            if self.rect.y > Cfg.screen_height + self.rect.height:
                 self.kill()
                 newspeed = random.randint(3, 6)
                 Enemy.createenemy(speed=newspeed, maxhealth=100, timebetweenshooting=30, count=1)
 
     def setposition(self):
-        self.rect.x = random.randrange(0, (screen_width - self.rect.width))
+        self.rect.x = random.randrange(0, (Config.Cfg.screen_width - self.rect.width))
         self.rect.y = random.randrange(-1200, -600)
 
     def rotation(self):
@@ -88,7 +93,7 @@ class EnemyProjectile(Projectile):
     def update(self, dir_and_speed):
         self.rect.y += dir_and_speed
 
-        if self.rect.y > screen_height:
+        if self.rect.y > Cfg.screen_height:
             self.kill()
 
 
@@ -100,34 +105,35 @@ class Asteroid(pygame.sprite.Sprite):
     def __init__(self, xpos=0, ypos=0, start_frame=0):
         super(Asteroid, self).__init__()
 
-        self.image = ASTEROID_FRAMES[start_frame]
+        self.image = Main.ASTEROID_FRAMES[start_frame]
         self.rect = self.image.get_rect()
         self.rect.x = xpos
         self.rect.y = ypos
         self.frame = start_frame
-        self.speed = random.randint(3, 6)
-        self.sound_effect = pygame.mixer.Sound(file='244345__willlewis__musket-explosion.wav')
+        self.speed = Main.random.randint(3, 6)
+        self.sound_effect = pygame.mixer.Sound(file=R'C:\Users\danba\PycharmProjects\Space-shooter-game\sound_fx'
+                                                    R'\244345__willlewis__musket-explosion.wav')
 
     def set_random_attr(self):
         self.reset_position()
         self.frame = random.randint(0, 59)
-        self.image = ASTEROID_FRAMES[self.frame]
+        self.image = Main.ASTEROID_FRAMES[self.frame]
 
     def reset_position(self):
         self.rect.y = random.randrange(-900, -400)
-        self.rect.x = random.randrange(0, (screen_width - self.rect.width))
+        self.rect.x = random.randrange(0, (Config.Cfg.screen_width - self.rect.width))
 
     def update(self):
         self.rect.y += self.speed
 
-        if self.rect.y > screen_height + 150:
+        if self.rect.y > Config.Cfg.screen_height + 150:
             self.kill()
             Asteroid.createasteroid(count=2)
 
         self.frame += 1
         " Remainder-Division."
-        self.frame %= len(ASTEROID_FRAMES)
-        self.image = ASTEROID_FRAMES[self.frame]
+        self.frame %= len(Main.ASTEROID_FRAMES)
+        self.image = Main.ASTEROID_FRAMES[self.frame]
 
     @classmethod
     def createasteroid(cls, count=1):

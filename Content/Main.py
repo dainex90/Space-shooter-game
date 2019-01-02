@@ -1,70 +1,49 @@
-import cls as cls
+
+from Content import Player, Enums, Config, Tiles, fx, Enemies, GUI
+from .Config import Cfg
+from .fx import Explosion, Effect
 import pygame
 import os
 import random
 import time
-from enum import Enum
-
-"Class Namespaces/Modules! --->"
-
-
-from _Content.Player import *
-
-
-pygame.mixer.pre_init(44100, 16, 2, 4096)
-pygame.init()
-black = (0, 0, 0)
-white = (255, 255, 255)
-red = (200, 40, 60)
-green = (50, 180, 50)
-blue = (50, 30, 200)
-skyblue = (135, 206, 250)
-silver = (192, 192, 192)
-darkgray = (47, 79, 79)
-vegasgold = (197, 179, 88)
-nightblue = (25, 25, 112)
-steelblue = (70, 130, 180)
-deepblue = (0, 26, 51)
-orange = (255, 69, 0)
-
-screen_width = 1280
-screen_height = 720
-half_width = screen_width/2
-half_height = screen_height/2
-
-screen = pygame.display.set_mode([screen_width, screen_height])
-Title = pygame.display.set_caption('Space Mash')
-clock = pygame.time.Clock()
-fps = 30
 
 all_sprites_list = pygame.sprite.Group()
 
-" List Comprehension. "
-ENGINE_FIRE = list([pygame.image.load(r'C:\Users\danba\PycharmProjects\Space-shooter-game\Sprites\jet_fire_{0}.png'
+" list comprehension, loading the ship fire effect "
+ENGINE_FIRE = list([pygame.image.load(R'C:\Users\danba\PycharmProjects\Space-shooter-game\Sprites\jet_fire_{0}.png'
                                       .format(i)) for i in range(1, 9)])
 SCALED_ENGINE_FIRE = list([])
 
+"and scales the effect.."
 for frame in ENGINE_FIRE:
     SCALED_ENGINE_FIRE.append(pygame.transform.smoothscale(frame, (70, 60)))
 
-player = SpaceShip()
+player = Player.SpaceShip()
 
-player.set_image("F5S4.png")
-player.center_set_position(half_width, screen_height)
+player.set_image(R"C:\Users\danba\PycharmProjects\Space-shooter-game\Sprites\F5S4.png")
+player.center_set_position(Config.Cfg.half_width, Config.Cfg.screen_height)
 
 all_sprites_list.add(player)
 
-bgnd = TileSet()
+bgnd = Tiles.TileSet()
 
-" LIST COMPREHENSIONS! "
 
-AST_EXP_SHEETS = list([pygame.image.load('Asteroid_explosions_{0}.png'.format(i)) for i in range(1, 4)])
-ASTEROID_FRAMES = list([pygame.image.load('Asteroid_{0}.png'.format(i)) for i in range(1, 61)])
+" Loading the asteroid explosion sprite sheets into a list "
+AST_EXP_SHEETS = list([pygame.image.load(R'C:\Users\danba\PycharmProjects\Space-shooter-game\Sprites'
+                                         R'\fx\Asteroid_explosions_{0}.png'.format(i)) for i in range(1, 4)])
+
+"loading all the asteroid sprites to a list"
+ASTEROID_FRAMES = list([pygame.image.load(R'C:\Users\danba\PycharmProjects\Space-shooter-game\Sprites'
+                                          R'\Asteroid sprites\Asteroid_{0}.png'.format(i)) for i in range(1, 61)])
+
+# todo - what is this?
+"""
 EXPLOSION_FRAMES = list([pygame.image.load('Explosion_animation{0}.png'.format(i)) for i in range(1, 34)])
 SCALED_EXPLOSION_FRAMES = []
 
 for frames in EXPLOSION_FRAMES:
     SCALED_EXPLOSION_FRAMES.append(pygame.transform.smoothscale(frames, (60, 60)))
+    """
 
 explosion = Effect()
 Effect.all_effects.add(explosion)
@@ -73,7 +52,7 @@ Effect.all_effects.add(explosion)
 def game_over():
 
     player.idling_engine_soundfx.stop()
-    texttoscreen(text='Game Over!')
+    text_to_screen(text='Game Over!')
     pygame.display.update()
     time.sleep(5)
     player.score = 0
@@ -81,50 +60,52 @@ def game_over():
     bgnd.PosY = 0
 
     " Remove all sprites in data-structure/group."
-    Asteroid.killallasteroids()
-    Enemy.killallenemies()
-    gameloop()
+    Enemies.Asteroid.killallasteroids()
+    Enemies.Enemy.killallenemies()
+    game_loop()
 
 
-def texttoscreen(text, font='spaceport1i.ttf', size=50, color=silver, pos_X=half_width, pos_Y=half_height):
+def text_to_screen(text, font=R'C:\Users\danba\PycharmProjects\Space-shooter-game\Fonts'
+                              R'\spaceport1i.ttf', size=50, color=Config.Cfg.silver, pos_x=Config.Cfg.half_width,
+                   pos_y=Config.Cfg.half_height):
 
     font = pygame.font.Font(font, size, bold=True)
     textsurf = font.render(text, True, color)
     text_rect = textsurf.get_rect()
-    text_rect.center = (pos_X, pos_Y)
-    screen.blit(textsurf, text_rect)
+    text_rect.center = (pos_x, pos_y)
+    Config.Cfg.screen.blit(textsurf, text_rect)
 
 
-""" Game Loop --> """
+""" Game Loop """
 
 
-def gameloop():
+def game_loop():
     player.idling_engine_soundfx.set_volume(0.1)
     player.idling_engine_soundfx.play(loops=-1)
-    curgamestate = GameStates.InGame.name
-    curlevelstate = LevelStates.Level1.name
+    curgamestate = Enums.GameStates.InGame.name
+    curlevelstate = Enums.LevelStates.Level1.name
     ending = False
-    Star.createstarobjects()
-    asteroid = Asteroid(xpos=750, ypos=-500, start_frame=0)
-    Asteroid.all_asteroids.add(asteroid)
-    enemy_ship = Enemy(speed=4, maxhealth=100, timebetweenshooting=30)
-    Enemy.all_enemies.add(enemy_ship)
-    ammo = EnergyBar()
+    fx.Star.createstarobjects()
+    asteroid = Enemies.Asteroid(xpos=750, ypos=-500, start_frame=0)
+    Enemies.Asteroid.all_asteroids.add(asteroid)
+    enemy_ship = Enemies.Enemy(speed=4, maxhealth=100, timebetweenshooting=30)
+    Enemies.Enemy.all_enemies.add(enemy_ship)
+    ammo = GUI.EnergyBar()
 
     all_sprites_list.add([asteroid, enemy_ship])
 
-    if curgamestate == GameStates.MainMenu.name:
+    if curgamestate == Enums.GameStates.MainMenu.name:
         
         "You Are in Main Menu!"
         "..."
 
-    elif curgamestate == GameStates.InGame.name:
+    elif curgamestate == Enums.GameStates.InGame.name:
 
         "You are InGame!!"
         "..." \
 
         "WHAT LEVEL? ->"
-        if curlevelstate == LevelStates.Level1.name:
+        if curlevelstate == Enums.LevelStates.Level1.name:
 
             " LEVEL 1 HERE "
             while not ending:
@@ -177,10 +158,10 @@ def gameloop():
                         if event.key == pygame.K_SPACE:
                             if not ammo.overload:
                                 player.isshooting = True
-                                projectile = PlayerProjectile(posx=player.rect.x, posy=player.rect.y)
+                                projectile = Player.PlayerProjectile(posx=player.rect.x, posy=player.rect.y)
                                 projectile.rect.centerx = player.rect.centerx
                                 projectile.rect.bottom = player.rect.y - (projectile.rect.height * 2)
-                                PlayerProjectile.all_projectiles.add(projectile)
+                                Player.PlayerProjectile.all_projectiles.add(projectile)
                                 ammo.energyCur -= ammo.energyDrain
                         if event.key == pygame.K_p:
                             player.pause = True
@@ -190,20 +171,23 @@ def gameloop():
                             player.acceleration_sound.stop()"""
                 " UPDATE ALL MOVING SPRITES!   -------------- "
 
-                Enemy.all_enemies.update()
-                Asteroid.all_asteroids.update()
-                PlayerProjectile.all_projectiles.update(-50)
-                EnemyProjectile.all_projectiles.update(60)
+                Enemies.Enemy.all_enemies.update()
+                Enemies.Asteroid.all_asteroids.update()
+                Player.PlayerProjectile.all_projectiles.update(-50)
+                Enemies.EnemyProjectile.all_projectiles.update(60)
 
                 " Collition Detection! "
 
-                player_hit_asteroids = pygame.sprite.spritecollide(player, Asteroid.all_asteroids, True)
-                proj_hit_asteroids = pygame.sprite.groupcollide(Asteroid.all_asteroids, PlayerProjectile.all_projectiles, True,
+                player_hit_asteroids = pygame.sprite.spritecollide(player, Enemies.Asteroid.all_asteroids, True)
+                proj_hit_asteroids = pygame.sprite.groupcollide(Enemies.Asteroid.all_asteroids, Player.PlayerProjectile
+                                                                .all_projectiles, True,
                                                                 True)
-                enemyproj_hit_player = pygame.sprite.spritecollide(player, EnemyProjectile.all_projectiles, False)
-                playerproj_hit_enemies = pygame.sprite.groupcollide(Enemy.all_enemies, PlayerProjectile.all_projectiles, False,
+                enemyproj_hit_player = pygame.sprite.spritecollide(player, Enemies.EnemyProjectile.all_projectiles
+                                                                   , False)
+                playerproj_hit_enemies = pygame.sprite.groupcollide(Enemies.Enemy.all_enemies, Player.PlayerProjectile
+                                                                    .all_projectiles, False,
                                                                     True)
-                player_hit_enemies = pygame.sprite.spritecollide(player, Enemy.all_enemies, True)
+                player_hit_enemies = pygame.sprite.spritecollide(player, Enemies.Enemy.all_enemies, True)
 
                 for asteroid in proj_hit_asteroids:
                     asteroid.sound_effect.set_volume(1.0)
@@ -244,7 +228,7 @@ def gameloop():
                     explosion.playerexp = True
                     player.accelerationFire = False
                     player.health -= 1
-                    Asteroid.createasteroid(count=3)
+                    Enemies.Asteroid.createasteroid(count=3)
 
                 for enemy in player_hit_enemies:
                     explosion.asteroidExpframes = AST_EXP_SHEETS[0]
@@ -253,41 +237,41 @@ def gameloop():
                     explosion.playerexp = True
                     player.accelerationFire = False
                     player.health -= 2
-                    Asteroid.createasteroid(count=3)
+                    Enemies.Asteroid.createasteroid(count=3)
 
-                if (Asteroid.all_asteroids.__len__()) < 3:
-                    Asteroid.createasteroid(count=2)
+                if (Enemies.Asteroid.all_asteroids.__len__()) < 3:
+                    Enemies.Asteroid.createasteroid(count=2)
 
-                if (Enemy.all_enemies.__len__()) < 3:
+                if (Enemies.Enemy.all_enemies.__len__()) < 3:
                     newspeed = random.randint(3, 6)
-                    Enemy.createenemy(speed=newspeed, maxhealth=100, timebetweenshooting=30, count=2)
+                    Enemies.Enemy.createenemy(speed=newspeed, maxhealth=100, timebetweenshooting=30, count=2)
 
                 " Blitting all Sprites "
 
-                screen.fill(deepblue)
+                Config.Cfg.screen.fill(Config.Cfg.deepblue)
                 bgnd.setBgnd()
-                Star.all_stars.draw(screen)
-                Asteroid.all_asteroids.draw(screen)
-                Enemy.all_enemies.draw(screen)
-                PlayerProjectile.all_projectiles.draw(screen)
-                EnemyProjectile.all_projectiles.draw(screen)
+                fx.Star.all_stars.draw(Cfg.screen)
+                Enemies.Asteroid.all_asteroids.draw(Cfg.screen)
+                Enemies.Enemy.all_enemies.draw(Cfg.screen)
+                Player.PlayerProjectile.all_projectiles.draw(Cfg.screen)
+                Enemies.EnemyProjectile.all_projectiles.draw(Cfg.screen)
                 player.draw_ship()
                 player.draw_UI()
                 player.muzzle_flash_effect()
                 """enemy_ship.draw()
                 enemy_ship.checkenemyposition()"""
                 explosion.ast_exp(explosion.astPosX, explosion.astPosY)
-                texttoscreen(text='Score: {0}'.format(player.score), size=12, pos_X=400, pos_Y=15)
-                texttoscreen(text='Highscore: {0}'.format(player.highscore), size=15, color=vegasgold, pos_Y=15)
+                text_to_screen(text='Score: {0}'.format(player.score), size=12, pos_x=400, pos_y=15)
+                text_to_screen(text='Highscore: {0}'.format(player.highscore), size=15, color=Cfg.vegasgold, pos_y=15)
                 ammo.draw_bar()
                 pygame.display.update()
-                clock.tick(30)
+                Cfg.clock.tick(30)
 
                 if player.pause:
                     pause = True
                     while pause:
                         player.idling_engine_soundfx.stop()
-                        texttoscreen("PAUSE", color=steelblue)
+                        text_to_screen("PAUSE", color=Cfg.steelblue)
                         pygame.display.update()
 
                         for event in pygame.event.get():
@@ -301,4 +285,5 @@ def gameloop():
             quit()
 
 
-gameloop()
+"calling the game loop"
+game_loop()

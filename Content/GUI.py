@@ -1,5 +1,7 @@
-
-from _Content.Main import *
+from Content import Main
+from .Main import *
+from .Config import Cfg
+import pygame
 
 
 class EnergyBar(pygame.sprite.Sprite):
@@ -12,17 +14,18 @@ class EnergyBar(pygame.sprite.Sprite):
         self.energyRecharge = 0.3
         self.image = pygame.Surface((100, 15))
         self.rect = self.image.get_rect()
-        self.image.fill(white)
-        self.rect.center = (half_width/3, 700)
-        self.color = green
+        self.image.fill(Cfg.white)
+        self.rect.center = (Cfg.half_width / 3, 700)
+        self.color = Cfg.green
         self.overload = False
         self.cooldown = 1000
-        print(os.getcwd())  # Log this line.
-        self.overload_soundfx = pygame.mixer.Sound('354049__pauldihor__gun-fire-for-futuristic-game.wav')
+        #print(os.getcwd())  # Log this line.
+        self.overload_soundfx = pygame.mixer.Sound(R'C:\Users\danba\PycharmProjects\Space-shooter-game\sound_fx'
+                                                   R'\354049__pauldihor__gun-fire-for-futuristic-game.wav')
 
     def draw_bar(self):
         self.update_bar()
-        pygame.draw.rect(screen, self.color, [self.rect.x, self.rect.y, self.energyCur, 15])
+        pygame.draw.rect(Cfg.screen, self.color, [self.rect.x, self.rect.y, self.energyCur, 15])
 
     def update_bar(self):
 
@@ -33,14 +36,14 @@ class EnergyBar(pygame.sprite.Sprite):
             if self.energyCur < self.energyMax:
                 self.energyDrain = 5
                 self.energyCur += self.energyRecharge
-                self.color = green
+                self.color = Cfg.green
 
             if self.energyCur <= int(self.rect.width / 2):
-                self.color = orange
+                self.color = Cfg.orange
                 self.energyDrain = 10
 
             if self.energyCur <= int(self.rect.width / 3):
-                self.color = red
+                self.color = Cfg.red
 
             if self.energyCur <= self.energyMin:
                 self.overload = True
@@ -48,7 +51,7 @@ class EnergyBar(pygame.sprite.Sprite):
             if self.cooldown > 0:
 
                 self.overload_soundfx.play()
-                texttoscreen('Overload!', color=red)
+                Main.text_to_screen('Overload!', color=Cfg.red)
                 self.cooldown -= 25
             else:
                 self.cooldown = 1000

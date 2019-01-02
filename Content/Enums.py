@@ -1,5 +1,6 @@
 
-from _Content.Main import *
+from .Main import *
+from enum import Enum
 
 
 class States(Enum):
