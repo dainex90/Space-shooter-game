@@ -1,11 +1,17 @@
 
 from Content import Player, Enums, Config, Tiles, fx, Enemies, GUI
 from .Config import Cfg
+from .Button import Button
+from .InputBox import InputBox
 from .fx import Explosion, Effect
 import pygame
 import os
 import random
 import time
+
+# todo - setting up the game/level states
+curgamestate = Enums.GameStates.MainMenu.name
+curlevelstate = Enums.LevelStates.Level1.name
 
 all_sprites_list = pygame.sprite.Group()
 
@@ -80,10 +86,9 @@ def text_to_screen(text, font=R'C:\Users\danba\PycharmProjects\Space-shooter-gam
 
 
 def game_loop():
+
     player.idling_engine_soundfx.set_volume(0.1)
     player.idling_engine_soundfx.play(loops=-1)
-    curgamestate = Enums.GameStates.InGame.name
-    curlevelstate = Enums.LevelStates.Level1.name
     ending = False
     fx.Star.createstarobjects()
     asteroid = Enemies.Asteroid(xpos=750, ypos=-500, start_frame=0)
@@ -95,9 +100,49 @@ def game_loop():
     all_sprites_list.add([asteroid, enemy_ship])
 
     if curgamestate == Enums.GameStates.MainMenu.name:
-        
+
+        play_button = Button(Cfg.half_width, Cfg.half_height, 140, 32, 'Play')
+        exit_button = Button(Cfg.half_width, Cfg.half_height + 50, 140, 32, 'Exit')
+        buttons = [play_button, exit_button]
+        in_main_menu = True
         "You Are in Main Menu!"
         "..."
+        while in_main_menu:
+            Cfg.screen.fill(Cfg.deepblue)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    in_main_menu = False
+
+                for button in buttons:
+                    button.handle_event(event)
+
+            for button in buttons:
+                if button.pressed:
+                    # Some button is pressed , checking which one ->!
+                    if button.text == "Play":
+                        # todo - Let the player enter its name before gaming!
+                        _text = Button(Cfg.half_width, (Cfg.half_height-50), 140, 32, 'Enter Name')
+                        input_name_box = InputBox(Cfg.half_width, Cfg.half_height, 140, 32)
+                        while in_main_menu:
+
+                            for event in pygame.event.get():
+                                if event.type == pygame.QUIT:
+                                    in_main_menu = False
+                                    continue
+                                input_name_box.handle_event(event)
+
+                            _text.update()
+                            input_name_box.update()
+                            Cfg.fill()
+                            _text.draw(Cfg.screen)
+                            input_name_box.draw(Cfg.screen)
+                            Cfg.refresh()
+                    elif button.text == "Exit":
+                        in_main_menu = False
+
+            for button in buttons:
+                button.draw(Cfg.screen)
+            Cfg.refresh()
 
     elif curgamestate == Enums.GameStates.InGame.name:
 
@@ -248,7 +293,7 @@ def game_loop():
 
                 " Blitting all Sprites "
 
-                Config.Cfg.screen.fill(Config.Cfg.deepblue)
+                Cfg.screen.fill(Cfg.deepblue)
                 bgnd.setBgnd()
                 fx.Star.all_stars.draw(Cfg.screen)
                 Enemies.Asteroid.all_asteroids.draw(Cfg.screen)

@@ -32,4 +32,11 @@ class Cfg(pygame.sprite.Sprite):
     clock = pygame.time.Clock()
     fps = 30
 
+    @classmethod
+    def refresh(cls, fps=30):
+        pygame.display.update()
+        cls.clock.tick(fps)
 
+    @classmethod
+    def fill(cls, color=deepblue):
+        cls.screen.fill(color)
