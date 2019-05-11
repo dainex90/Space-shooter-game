@@ -35,6 +35,8 @@
       <w>lala</w>
       <w>levelstate</w>
       <w>mech</w>
+      <w>moveleft</w>
+      <w>moveright</w>
       <w>newgamestate</w>
       <w>newlevelstate</w>
       <w>newspeed</w>
