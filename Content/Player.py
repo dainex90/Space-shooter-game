@@ -46,11 +46,13 @@ class SpaceShip(pygame.sprite.Sprite):
 
         self.cur_velocity_x = 0
         self.cur_velocity_y = 0
-        self.acceleration = 0.3
-        self.deceleration = 0.3
-        self.turn_acceleration = 0.7
-        self.max_velocity_x = 12
-        self.max_velocity_y = 6
+
+        "physics"
+        self.acceleration = 0.4
+        self.deceleration = 1.4
+        self.turn_acceleration = 2.2
+        self.max_velocity_x = 16
+        self.max_velocity_y = 5
 
     def transform_image(self):
         self.image = pygame.transform.smoothscale(self.image, (65, 65))
@@ -83,8 +85,10 @@ class SpaceShip(pygame.sprite.Sprite):
             self.rect.x = (0 - self.rect.width)
         if self.rect.x < (0 - self.rect.width):
             self.rect.x = Cfg.screen_width
-        if self.rect.bottom > Cfg.screen_height:
-            self.rect.bottom = Cfg.screen_height
+
+            # todo - Fix magic numbers!
+        if self.rect.bottom > Cfg.screen_height - 70:
+            self.rect.bottom = Cfg.screen_height - 70
         if self.rect.top < 0:
             self.rect.top = 0
 

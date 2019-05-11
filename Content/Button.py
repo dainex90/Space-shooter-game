@@ -14,6 +14,7 @@ class Button(InputBox, pg.sprite.Sprite):
         super(Button, self).__init__(x, y, width, height, text)
         self.pressed = False
 
+    "Overrides base/super class, additional functionality"
     def handle_event(self, event):
         if event.type == pg.MOUSEMOTION:
             if self.rect.collidepoint(pg.mouse.get_pos()[0], pg.mouse.get_pos()[1]):

@@ -28,3 +28,4 @@ class LevelStates(States):
 
     def __init__(self, *args):
         super().__init__(*args)
+

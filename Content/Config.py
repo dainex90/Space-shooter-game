@@ -38,5 +38,5 @@ class Cfg(pygame.sprite.Sprite):
         cls.clock.tick(fps)
 
     @classmethod
-    def fill(cls, color=deepblue):
+    def fill(cls, color=black):
         cls.screen.fill(color)

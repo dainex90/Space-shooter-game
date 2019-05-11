@@ -15,7 +15,6 @@ class InputBox(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, text=''):
 
         super(InputBox, self).__init__()
-
         self.center_align_x = x - (width/2)
         self.center_align_y = y - (height/2)
         self.rect = pygame.Rect(self.center_align_x, self.center_align_y, width, height)
@@ -69,4 +68,3 @@ class InputBox(pygame.sprite.Sprite):
         pygame.draw.rect(screen, self.rect_color, self.rect, 0)
         'Blit the text'
         screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
-

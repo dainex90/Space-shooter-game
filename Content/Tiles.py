@@ -18,4 +18,4 @@ class TileSet(pygame.sprite.Sprite):
         Cfg.screen.blit(self.image, (0, self.rel_y - self.rect.height))
         if self.rel_y < Cfg.screen_height:
             Cfg.screen.blit(self.image, (0, self.rel_y))
-        self.PosY += 0.4
+        self.PosY += 0.6

@@ -26,9 +26,22 @@ class Enemy(pygame.sprite.Sprite):
         self.shoot_soundfx = pygame.mixer.Sound(file=R'C:\Users\danba\PycharmProjects\Space-shooter-game\sound_fx'
                                                      R'\391635__edo333__sci-fi-laser-gun.wav')
 
+        # Physics ->
+        self.cur_velocity_x = 0
+        # self.cur_velocity_y = 0
+
+        self.acceleration = 0.8
+        self.deceleration = 0.8
+        self.turn_acceleration = 1.2
+        self.max_velocity_x = 18
+        # self.max_velocity_y = 10
+
+        self.moveleft = True
+        self.moveright = False
+
     def update(self, *args, **kwargs):
-        if Main.bgnd.PosY >= 300:
-            self.rect.y += self.speed
+        if Main.bgnd.PosY >= 250:
+            self.move()
             self.timebetweenshooting -= 1
             if self.isshooting():
                 self.shoot_soundfx.play(fade_ms=300)
@@ -37,11 +50,12 @@ class Enemy(pygame.sprite.Sprite):
 
             if self.rect.y > Cfg.screen_height + self.rect.height:
                 self.kill()
-                newspeed = random.randint(3, 6)
+                newspeed = random.randint(4, 8)
                 Enemy.createenemy(speed=newspeed, maxhealth=100, timebetweenshooting=30, count=1)
 
     def setposition(self):
-        self.rect.x = random.randrange(0, (Config.Cfg.screen_width - self.rect.width))
+        self.rect.x = random.randrange(0 + self.max_velocity_x, (Config.Cfg.screen_width - (self.rect.width +
+                                                                                            self.max_velocity_x)))
         self.rect.y = random.randrange(-1200, -600)
 
     def rotation(self):
@@ -71,6 +85,30 @@ class Enemy(pygame.sprite.Sprite):
     def killallenemies(cls):
         for enemy in cls.all_enemies:
             enemy.kill()
+
+    def move(self):
+        "Move the enemy down at a constant speed"
+        self.rect.y += self.speed
+
+        "turn the enemy left and right with acceleration physics"
+        if self.moveleft:
+            self.cur_velocity_x -= self.turn_acceleration
+            self.rect.x += self.cur_velocity_x
+
+        if self.moveright:
+            self.cur_velocity_x += self.turn_acceleration
+            self.rect.x += self.cur_velocity_x
+
+        self.setMovementDirection()
+
+    def setMovementDirection(self):
+        if abs(self.cur_velocity_x) > self.max_velocity_x:
+            if self.cur_velocity_x < 0:
+                self.moveright = True
+                self.moveleft = False
+            else:
+                self.moveleft = True
+                self.moveright = False
 
 
 class EnemyProjectile(Projectile):
@@ -110,7 +148,7 @@ class Asteroid(pygame.sprite.Sprite):
         self.rect.x = xpos
         self.rect.y = ypos
         self.frame = start_frame
-        self.speed = Main.random.randint(3, 6)
+        self.speed = Main.random.randint(5, 8)
         self.sound_effect = pygame.mixer.Sound(file=R'C:\Users\danba\PycharmProjects\Space-shooter-game\sound_fx'
                                                     R'\244345__willlewis__musket-explosion.wav')
 

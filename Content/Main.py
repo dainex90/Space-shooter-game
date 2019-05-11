@@ -1,5 +1,6 @@
 
 from Content import Player, Enums, Config, Tiles, fx, Enemies, GUI
+from .Score import Score, Highscore
 from .Config import Cfg
 from .Button import Button
 from .InputBox import InputBox
@@ -32,7 +33,6 @@ player.center_set_position(Config.Cfg.half_width, Config.Cfg.screen_height)
 all_sprites_list.add(player)
 
 bgnd = Tiles.TileSet()
-
 
 " Loading the asteroid explosion sprite sheets into a list "
 AST_EXP_SHEETS = list([pygame.image.load(R'C:\Users\danba\PycharmProjects\Space-shooter-game\Sprites'
@@ -237,7 +237,7 @@ def game_loop():
                 for asteroid in proj_hit_asteroids:
                     asteroid.sound_effect.set_volume(1.0)
                     asteroid.sound_effect.play()
-                    player.score += 1
+                    Score.set_score(amount=1)
                     explosion.sheetType = random.randint(0, 2)
                     explosion.asteroidExpframes = AST_EXP_SHEETS[explosion.sheetType]
                     explosion.astPosX = asteroid.rect.x
@@ -247,11 +247,11 @@ def game_loop():
                 for enemy in playerproj_hit_enemies:
                     enemy.health -= 20
                     if not enemy.isalive():
-                        player.score += 5
+                        Score.set_score(amount=5)
                         explosion.sheetType = random.randint(0, 2)
                         explosion.asteroidExpframes = AST_EXP_SHEETS[explosion.sheetType]
-                        explosion.astPosX = asteroid.rect.x
-                        explosion.astPosY = asteroid.rect.y
+                        explosion.astPosX = enemy.rect.x
+                        explosion.astPosY = enemy.rect.y
                         explosion.enemyexp = True
                         enemy.kill()
 
@@ -272,7 +272,7 @@ def game_loop():
                     explosion.astPosY = player.rect.y
                     explosion.playerexp = True
                     player.accelerationFire = False
-                    player.health -= 1
+                    player.health -= 2
                     Enemies.Asteroid.createasteroid(count=3)
 
                 for enemy in player_hit_enemies:
@@ -287,9 +287,10 @@ def game_loop():
                 if (Enemies.Asteroid.all_asteroids.__len__()) < 3:
                     Enemies.Asteroid.createasteroid(count=2)
 
-                if (Enemies.Enemy.all_enemies.__len__()) < 3:
-                    newspeed = random.randint(3, 6)
-                    Enemies.Enemy.createenemy(speed=newspeed, maxhealth=100, timebetweenshooting=30, count=2)
+                if (Enemies.Enemy.all_enemies.__len__()) < 2:
+                    for i in range(2):
+                        newspeed = random.randint(4, 8)
+                        Enemies.Enemy.createenemy(speed=newspeed, maxhealth=100, timebetweenshooting=30, count=1)
 
                 " Blitting all Sprites "
 
