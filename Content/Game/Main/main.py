@@ -1,23 +1,32 @@
 
-from Content import Player, Enums, Config, Tiles, fx, Enemies, GUI
-from .Score import Score, Highscore
-from .Config import Cfg
-from .Button import Button
-from .InputBox import InputBox
-from .fx import Explosion, Effect
+# Packages
 import pygame
 import os
 import random
 import time
+import math
+
+import Content.Game.Characters.player
+
+# Local Packages
+from Content.Game.States.gamestates import *
+from Content.Game.States.levelstates import *
+from Content.Game.Characters.player import *
+from Content.Game.Main.tiles import *
+from Content.Game.Effects.game_effects import *
+from Content.Game.Characters.enemy import *
+from Content.Game.Effects.asteroid import *
 
 # todo - setting up the game/level states
-curgamestate = Enums.GameStates.MainMenu.name
-curlevelstate = Enums.LevelStates.Level1.name
+gameStates: GameStates =  GameStates("MainMenu", "InGame", "Pause", "Exit")
+curGameState: str = gameStates.mainMenu
+levelStates: LevelStates = LevelStates("level1", "level2", "level3")
+curLevelState: str = levelStates.level1
 
 all_sprites_list = pygame.sprite.Group()
 
 " list comprehension, loading the ship fire effect "
-ENGINE_FIRE = list([pygame.image.load(R'C:\Users\danba\PycharmProjects\Space-shooter-game\Sprites\jet_fire_{0}.png'
+ENGINE_FIRE = list([pygame.image.load(R'C:\Users\danie\PycharmProjects\Space-shooter-game\Sprites\jet_fire_{0}.png'
                                       .format(i)) for i in range(1, 9)])
 SCALED_ENGINE_FIRE = list([])
 
@@ -25,21 +34,21 @@ SCALED_ENGINE_FIRE = list([])
 for frame in ENGINE_FIRE:
     SCALED_ENGINE_FIRE.append(pygame.transform.smoothscale(frame, (70, 60)))
 
-player = Player.SpaceShip()
+player: SpaceShip = Content.Game.Characters.player.SpaceShip()
 
-player.set_image(R"C:\Users\danba\PycharmProjects\Space-shooter-game\Sprites\F5S4.png")
-player.center_set_position(Config.Cfg.half_width, Config.Cfg.screen_height)
+player.set_image(R"C:\Users\danie\PycharmProjects\Space-shooter-game\Sprites\F5S4.png")
+player.center_set_position(Cfg.half_width, Cfg.screen_height)
 
 all_sprites_list.add(player)
 
-bgnd = Tiles.TileSet()
+bgnd: TileSet = TileSet()
 
 " Loading the asteroid explosion sprite sheets into a list "
-AST_EXP_SHEETS = list([pygame.image.load(R'C:\Users\danba\PycharmProjects\Space-shooter-game\Sprites'
+AST_EXP_SHEETS = list([pygame.image.load(R'C:\Users\danie\PycharmProjects\Space-shooter-game\Sprites'
                                          R'\fx\Asteroid_explosions_{0}.png'.format(i)) for i in range(1, 4)])
 
 "loading all the asteroid sprites to a list"
-ASTEROID_FRAMES = list([pygame.image.load(R'C:\Users\danba\PycharmProjects\Space-shooter-game\Sprites'
+ASTEROID_FRAMES = list([pygame.image.load(R'C:\Users\danie\PycharmProjects\Space-shooter-game\Sprites'
                                           R'\Asteroid sprites\Asteroid_{0}.png'.format(i)) for i in range(1, 61)])
 
 # todo - what is this?
@@ -51,7 +60,7 @@ for frames in EXPLOSION_FRAMES:
     SCALED_EXPLOSION_FRAMES.append(pygame.transform.smoothscale(frames, (60, 60)))
     """
 
-explosion = Effect()
+explosion: Effect = Effect(AST_EXP_SHEETS)
 Effect.all_effects.add(explosion)
 
 
@@ -72,8 +81,8 @@ def game_over():
 
 
 def text_to_screen(text, font=R'C:\Users\danba\PycharmProjects\Space-shooter-game\Fonts'
-                              R'\spaceport1i.ttf', size=50, color=Config.Cfg.silver, pos_x=Config.Cfg.half_width,
-                   pos_y=Config.Cfg.half_height):
+                              R'\spaceport1i.ttf', size=50, color=Cfg.silver, pos_x=Cfg.half_width,
+                   pos_y=Cfg.half_height):
 
     font = pygame.font.Font(font, size, bold=True)
     textsurf = font.render(text, True, color)
@@ -84,15 +93,15 @@ def text_to_screen(text, font=R'C:\Users\danba\PycharmProjects\Space-shooter-gam
 
 """ Game Loop """
 
-
 def game_loop():
+
 
     player.idling_engine_soundfx.set_volume(0.1)
     player.idling_engine_soundfx.play(loops=-1)
     ending = False
-    fx.Star.createstarobjects()
-    asteroid = Enemies.Asteroid(xpos=750, ypos=-500, start_frame=0)
-    Enemies.Asteroid.all_asteroids.add(asteroid)
+    Star.createstarobjects()
+    asteroid: Asteroid = Asteroid(xpos=750, ypos=-500, start_frame=0)
+    Asteroid.all_asteroids.add(asteroid)
     enemy_ship = Enemies.Enemy(speed=4, maxhealth=100, timebetweenshooting=30)
     Enemies.Enemy.all_enemies.add(enemy_ship)
     ammo = GUI.EnergyBar()
@@ -333,3 +342,15 @@ def game_loop():
 
 "calling the game loop"
 game_loop()
+
+""" END OF MAIN!"""
+
+
+
+
+
+
+
+
+
+
