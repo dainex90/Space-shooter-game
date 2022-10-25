@@ -1,6 +1,6 @@
 
 # Packages
-from Content.Game import Characters
+
 import pygame
 import os
 import random

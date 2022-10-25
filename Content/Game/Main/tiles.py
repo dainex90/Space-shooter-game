@@ -1,4 +1,5 @@
 import pygame
+from Content.Game.Settings.config import Cfg
 
 class TileSet(pygame.sprite.Sprite):
     def __init__(self):

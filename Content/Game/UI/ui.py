@@ -1,6 +1,7 @@
 import pygame
 
-
+from Content.Game.Settings.config import Cfg
+from Content.Game.Main import main
 
 class EnergyBar(pygame.sprite.Sprite):
     def __init__(self):
@@ -49,7 +50,7 @@ class EnergyBar(pygame.sprite.Sprite):
             if self.cooldown > 0:
 
                 self.overload_soundfx.play()
-                Main.text_to_screen('Overload!', color=Cfg.red)
+                main.text_to_screen('Overload!', color=Cfg.red)
                 self.cooldown -= 25
             else:
                 self.cooldown = 1000

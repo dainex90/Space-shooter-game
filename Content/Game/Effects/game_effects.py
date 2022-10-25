@@ -3,6 +3,7 @@ import random
 
 # LOCAL IMPORTS
 from Content.Game.Settings.config import *
+from Content.Game.Main import main
 
 
 class PlayerProjectile(pygame.sprite.Sprite):
@@ -67,8 +68,8 @@ class Effect(pygame.sprite.Sprite):
                     self.astexp = False
                     self.player_explosion = False
                     self.enemyexp = False
-                    if Main.player.health <= 0:
-                        Main.game_over()
+                    if main.player.health <= 0:
+                        main.game_over()
 
 
 class Explosion(Effect):
