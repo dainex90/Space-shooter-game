@@ -2,10 +2,10 @@
 
 class GameStates:
 
-    mainMenu = ""
-    inGame = ""
-    pause = ""
-    exit = ""
+    mainMenu: str = ""
+    inGame: str = ""
+    pause: str = ""
+    exit: str = ""
 
     def __init__(self, mainMenu, inGame, pause, exit):
         super().__init__()

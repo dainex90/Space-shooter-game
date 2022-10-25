@@ -21,21 +21,21 @@ class Cfg(pygame.sprite.Sprite):
     deepblue = (0, 26, 51)
     orange = (255, 69, 0)
 
-    screen_width = 1280
-    screen_height = 720
-    half_width = screen_width / 2
-    half_height = screen_height / 2
+    screen_width: int = 1280
+    screen_height: int = 720
+    half_width: float = screen_width / 2
+    half_height: float = screen_height / 2
 
     screen = pygame.display.set_mode([screen_width, screen_height])
-    Title = pygame.display.set_caption('Imago Hunters of the Darkspace')
+    Title = pygame.display.set_caption('Imago Hunters')
     clock = pygame.time.Clock()
     fps = 30
 
     @classmethod
-    def refresh(cls, fps=30):
+    def refresh(cls, fps: int = 30) -> None:
         pygame.display.update()
         cls.clock.tick(fps)
 
     @classmethod
-    def fill(cls, color=black):
+    def fill(cls, color: tuple = black):
         cls.screen.fill(color)
