@@ -1,6 +1,8 @@
+from Content.Game.Settings.config import Cfg
 import pygame
+import random
 
-from Content.Game.Main.main import *
+from Content.Game.Main import main
 
 
 class Asteroid(pygame.sprite.Sprite):
@@ -8,10 +10,10 @@ class Asteroid(pygame.sprite.Sprite):
     next_level_count: int = 0
     all_asteroids = pygame.sprite.Group()
 
-    def __init__(self, ASTEROID_FRAMES, xpos: int = 0, ypos: int = 0, start_frame: int = 0, ):
+    def __init__(self, asteroid_frames, xpos: int = 0, ypos: int = 0, start_frame: int = 0, ):
         super(Asteroid, self).__init__()
 
-        self.image = ASTEROID_FRAMES[start_frame]
+        self.image = asteroid_frames[start_frame]
         self.rect = self.image.get_rect()
         self.rect.x = xpos
         self.rect.y = ypos
@@ -23,7 +25,7 @@ class Asteroid(pygame.sprite.Sprite):
     def set_random_attr(self):
         self.reset_position()
         self.frame = random.randint(0, 59)
-        self.image = ASTEROID_FRAMES[self.frame]
+        self.image = main.ASTEROID_FRAMES.ASTEROID_FRAMES[self.frame]
 
     def reset_position(self):
         self.rect.y = random.randrange(-900, -400)
@@ -34,23 +36,22 @@ class Asteroid(pygame.sprite.Sprite):
 
         if self.rect.y > Cfg.screen_height + 150:
             self.kill()
-            Asteroid.createasteroid(count=2)
+            Asteroid.create_asteroid(count=2)
 
         self.frame += 1
         " Remainder-Division."
-        self.frame %= len(ASTEROID_FRAMES)
-        self.image = ASTEROID_FRAMES[self.frame]
+        self.frame %= len(main.ASTEROID_FRAMES)
+        self.image = main.ASTEROID_FRAMES[self.frame]
 
     @classmethod
-    def createasteroid(cls, count=1):
-        for i in range(count):
-
+    def create_asteroid(cls, count:int = 1) -> None:
+        for _ in range(count):
             asteroid = Asteroid()
             asteroid.set_random_attr()
             cls.all_asteroids.add(asteroid)
 
     @classmethod
-    def killallasteroids(cls):
+    def kill_all_asteroids(cls):
         for asteroid in cls.all_asteroids:
             asteroid.kill()
 

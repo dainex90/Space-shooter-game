@@ -5,8 +5,8 @@ import pygame
 from Content.Game.Effects.game_effects import EnemyProjectile
 
 # LOCAL IMPORTS
-from Content.Game.Main.main import *
-from Content.Game.Settings.config import *
+from Content.Game.Main import main
+from Content.Game.Settings.config import Cfg
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -29,19 +29,19 @@ class Enemy(pygame.sprite.Sprite):
         # Physics ->
 
         self.cur_velocity_x: int = 0
-        # self.cur_velocity_y = 0
+        self.cur_velocity_y: int = 0
 
         self.acceleration: float = 0.8
         self.deceleration: float = 0.8
         self.turn_acceleration: float = 1.2
         self.max_velocity_x: int = 18
-        # self.max_velocity_y = 10
+        self.max_velocity_y: int = 10
 
         self.moveleft: bool = True
         self.moveright: bool = False
 
     def update(self, *args, **kwargs) -> None:
-        if bgnd.PosY >= 250:
+        if main.background.PosY >= 250:
             self.move()
             self.timebetweenshooting -= 1
             if self.isshooting():
@@ -52,7 +52,7 @@ class Enemy(pygame.sprite.Sprite):
             if self.rect.y > Cfg.screen_height + self.rect.height:
                 self.kill()
                 newspeed = random.randint(4, 8)
-                Enemy.createenemy(speed=newspeed, maxhealth=100, timebetweenshooting=30, count=1)
+                Enemy.create_enemy(speed=newspeed, maxhealth=100, timebetweenshooting=30, count=1)
 
     def setposition(self) -> None:
         self.rect.x = random.randrange(0 + self.max_velocity_x, (Cfg.screen_width - (self.rect.width +
@@ -76,8 +76,8 @@ class Enemy(pygame.sprite.Sprite):
             return False
 
     @classmethod
-    def createenemy(cls, speed, maxhealth, timebetweenshooting, count=1) -> None:
-        for i in range(count):
+    def create_enemy(cls, speed, maxhealth, timebetweenshooting, count=1) -> None:
+        for _ in range(count):
             enemy = Enemy(speed, maxhealth, timebetweenshooting)
             enemy.setposition()
             cls.all_enemies.add(enemy)

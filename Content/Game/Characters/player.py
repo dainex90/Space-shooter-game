@@ -3,7 +3,7 @@ import pygame
 
 from Content.Game.Main.main import SCALED_ENGINE_FIRE
 # LOCAL IMPORTS
-from Content.Game.Settings.config import *
+from Content.Game.Settings.config import Cfg
 
 
 class SpaceShip(pygame.sprite.Sprite):
@@ -27,7 +27,7 @@ class SpaceShip(pygame.sprite.Sprite):
 
         self.maxhealth: int = 3
         self.health = self.maxhealth
-        self.accelerationFire: bool = False
+        self.acceleration_fire: bool = False
         self.frame: int = 0
         self.score: int = 0
         self.highscore: int = 0
@@ -57,7 +57,7 @@ class SpaceShip(pygame.sprite.Sprite):
         self.image = pygame.transform.smoothscale(self.image, (65, 65))
         self.rect = self.image.get_rect()
 
-    def set_image(self, filename: str):
+    def set_image(self, filename: str) -> None:
         self.image = pygame.image.load(filename)
         self.rect = self.image.get_rect()
         self.UI_image = pygame.transform.smoothscale(self.image, (30, 30))
@@ -67,7 +67,7 @@ class SpaceShip(pygame.sprite.Sprite):
         self.rect.x = x - self.rect.center[0]
         self.rect.y = y - self.rect.width
 
-    def draw_UI(self):
+    def draw_ui(self):
 
         if self.health == self.maxhealth:
             Cfg.screen.blit(self.UI_image, (Cfg.half_width/10, 650))
@@ -125,7 +125,7 @@ class SpaceShip(pygame.sprite.Sprite):
         self.accelerate_ship()
         self.outside_border_pos()
         Cfg.screen.blit(self.image, [self.rect.x, self.rect.y])
-        if self.accelerationFire:
+        if self.acceleration_fire:
             self.frame += 1
             self.frame %= len(SCALED_ENGINE_FIRE)
             self.engine_fire = SCALED_ENGINE_FIRE[self.frame]

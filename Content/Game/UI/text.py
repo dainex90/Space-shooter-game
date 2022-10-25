@@ -1,15 +1,17 @@
+from typing import overload
 import pygame
 
-from Content.Game.Main.main import *
+from Content.Game.Main import main
 from Content.Game.Settings.config import Cfg
 from Content.Game.States.gamestates import GameStates
 
 
 class InputBox(pygame.sprite.Sprite):
 
-    RECT_COLOR_INACTIVE = Cfg.darkgray
-    RECT_COLOR_ACTIVE = Cfg.green
-    TEXT_COLOR = Cfg.silver
+    # Constants
+    RECT_COLOR_INACTIVE:tuple = Cfg.darkgray
+    RECT_COLOR_ACTIVE:tuple = Cfg.green
+    DEFAULT_TEXT_COLOR:tuple = Cfg.silver
     FONT = pygame.font.Font(R'C:\Users\danie\PycharmProjects\Space-shooter-game\Fonts\spaceport1i.ttf', 32, bold=True)
 
     def __init__(self, x, y, width, height, text=''):
@@ -20,7 +22,7 @@ class InputBox(pygame.sprite.Sprite):
         self.rect = pygame.Rect(self.center_align_x, self.center_align_y, width, height)
         self.rect_color = self.RECT_COLOR_INACTIVE
         self.text = text
-        self.text_color = self.TEXT_COLOR
+        self.text_color = self.DEFAULT_TEXT_COLOR
         self.txt_surface = InputBox.FONT.render(text, True, self.text_color)
         self.active = False
 
@@ -36,27 +38,26 @@ class InputBox(pygame.sprite.Sprite):
 
             self.rect_color = InputBox.RECT_COLOR_ACTIVE if self.active else InputBox.RECT_COLOR_INACTIVE
         if event.type == pygame.KEYDOWN:
-            if self.active:
-                if event.key == pygame.K_RETURN:
-                    # todo - Save player name in a text file if not empty and start the game!
-                    if len(self.text) > 0:
-                        print('OK')
-                        curgamestate = GameStates.InGame.name
-                        game_loop()
-                    else:
-                        # todo - player has not entered a name.
+            if self.active and event.key == pygame.K_RETURN and len(self.text) > 0:
+            # todo - Save player name in a text file if not empty and start the game! 
+                print('OK')
+                main.curGameState = GameStates.inGame
+                 #todo - i removed the game_loop in main.py! what to do here now? 
+                 # game_loop()
+            else:
+                # todo - player has not entered a name.
 
-                        alert_text = InputBox(Cfg.screen_width, (Cfg.screen_height + 50), 140, 32, 'Enter a name!')
-                        alert_text.draw(Cfg.screen)
-                        print("Invalid Action!")
-                elif event.key == pygame.K_BACKSPACE:
-                    self.text = self.text[:-1]
+                alert_text = InputBox(Cfg.screen_width, (Cfg.screen_height + 50), 140, 32, 'Enter a name!')
+                alert_text.draw(Cfg.screen)
+                print("Invalid Action!")
 
-                else:
-                    self.text += event.unicode
+        elif event.key == pygame.K_BACKSPACE:
+                self.text = self.text[:-1]
 
-                'Re-render the text'
-                self.txt_surface = InputBox.FONT.render(self.text, True, self.text_color)
+        else:
+            self.text += event.unicode
+            'Re-render the text'
+            self.txt_surface = InputBox.FONT.render(self.text, True, self.text_color)
 
     def update(self):
 
@@ -64,21 +65,20 @@ class InputBox(pygame.sprite.Sprite):
         _width = max(200, self.txt_surface.get_width()+10)
         self.rect.w = _width
 
-    def draw(self, screen):
+    def draw(self, screen) -> None:
         """Blit the rect"""
         pygame.draw.rect(screen, self.rect_color, self.rect, 0)
         """Blit the text"""
         screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
 
 
-"""for creating the buttons in game"""
 
-
+"""Class for creating buttons in the game"""
 class Button(InputBox, pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, text=''):
 
         super(Button, self).__init__(x, y, width, height, text)
-        self.pressed = False
+        self.pressed:bool = False
 
     "Overrides base/super class, additional functionality"
     def handle_event(self, event):
@@ -90,7 +90,6 @@ class Button(InputBox, pygame.sprite.Sprite):
                 self.rect_color = self.RECT_COLOR_INACTIVE
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
-
                 "Button is pressed"
                 self.pressed = True
 
@@ -98,12 +97,3 @@ class Button(InputBox, pygame.sprite.Sprite):
                 "Button is not pressed"
                 self.pressed = False
 
-    "Checks which button is pressed"
-    # def button_check(self):
-    #
-    #     if self.text == "Play":
-    #         #todo - Let the user enter its name before playing using InputBox!
-    #         return InputBox(Cfg.half_width, Cfg.half_height, 140, 32)
-    #
-    #     elif self.text == "Exit":
-    #         return None

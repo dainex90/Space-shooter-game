@@ -35,7 +35,7 @@ class Effect(pygame.sprite.Sprite):
         self.numImages = 16
         self.curImageX = 0
         self.curimageY = 0
-        self.playerexp = False
+        self.player_explosion = False
         self.astexp = False
         self.enemyexp = False
         self.astPosX = 0
@@ -54,7 +54,7 @@ class Effect(pygame.sprite.Sprite):
         """
 
     def ast_exp(self, posx, posy):
-        if self.astexp or self.playerexp or self.enemyexp:
+        if self.astexp or self.player_explosion or self.enemyexp:
 
             Cfg.screen.blit(self.asteroidExpframes, (posx, posy),
                         (self.curImageX, self.curimageY, self.singleframe_width, self.singleframe_height))
@@ -65,7 +65,7 @@ class Effect(pygame.sprite.Sprite):
                 if self.curimageY == self.astexp_rect.height:
                     self.curimageY %= self.astexp_rect.height
                     self.astexp = False
-                    self.playerexp = False
+                    self.player_explosion = False
                     self.enemyexp = False
                     if Main.player.health <= 0:
                         Main.game_over()
