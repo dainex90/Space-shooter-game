@@ -62,7 +62,7 @@ SCALED_EXPLOSION_FRAMES = []
 
 for frames in EXPLOSION_FRAMES:
     SCALED_EXPLOSION_FRAMES.append(pygame.transform.smoothscale(frames, (60, 60)))
-    """
+"""
 
 explosion: Effect = Effect(AST_EXP_SHEETS)
 Effect.all_effects.add(explosion)

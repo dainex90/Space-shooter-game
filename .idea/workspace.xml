@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="31add88c-d174-49e1-9069-801a826cc6a8" name="Default" comment="Created separate Packages and modules containing classes/methods.&#10;The program is now way more structured for further development.">
-      <change beforePath="$PROJECT_DIR$/.idea/GameTime.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/GameTime.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="31add88c-d174-49e1-9069-801a826cc6a8" name="Default" comment="I further &quot;Cleaned up&quot; a lot of the code inside the modules, i for example added explicit data types for some variables and parameters for better readability, making it easier for other contributors to understand the program.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Game/Main/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Game/Main/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Game/Settings/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Game/Settings/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Game/States/gamestates.py" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Game/States/gamestates.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +28,12 @@
     </replaceStrings>
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
         <entry key="$PROJECT_DIR$" value="master" />
@@ -147,6 +152,11 @@
     "deletionFromPopupRequiresConfirmation": "false",
     "last_opened_file_path": "C:/Users/danie/PycharmProjects/Space-shooter-game/Content/Game/Main/main.py",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  },
+  "keyToStringList": {
+    "ChangesTree.GroupingKeys": [
+      "directory"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
@@ -288,7 +298,21 @@
       <option name="project" value="LOCAL" />
       <updated>1666471527780</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="I further &quot;Cleaned up&quot; a lot of the code inside the modules, i for example added explicit data types for some variables and parameters for better readability, making it easier for other contributors to understand the program.">
+      <created>1666479090410</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1666479090410</updated>
+    </task>
+    <task id="LOCAL-00003" summary="I further &quot;Cleaned up&quot; a lot of the code inside the modules, i for example added explicit data types for some variables and parameters for better readability, making it easier for other contributors to understand the program.">
+      <created>1666479262267</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1666479262267</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TodoView">
@@ -347,7 +371,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Created separate Packages and modules containing classes/methods.&#10;The program is now way more structured for further development." />
-    <option name="LAST_COMMIT_MESSAGE" value="Created separate Packages and modules containing classes/methods.&#10;The program is now way more structured for further development." />
+    <MESSAGE value="I further &quot;Cleaned up&quot; a lot of the code inside the modules, i for example added explicit data types for some variables and parameters for better readability, making it easier for other contributors to understand the program." />
+    <option name="LAST_COMMIT_MESSAGE" value="I further &quot;Cleaned up&quot; a lot of the code inside the modules, i for example added explicit data types for some variables and parameters for better readability, making it easier for other contributors to understand the program." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
