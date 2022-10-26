@@ -29,3 +29,6 @@ class Highscore(Score):
 
         super(Highscore, self).__init__()
 
+
+
+

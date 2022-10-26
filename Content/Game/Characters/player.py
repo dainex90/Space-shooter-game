@@ -1,7 +1,7 @@
 
 import pygame
 
-from Content.Game.Main.main import SCALED_ENGINE_FIRE
+
 # LOCAL IMPORTS
 from Content.Game.Settings.config import Cfg
 
@@ -11,7 +11,12 @@ class SpaceShip(pygame.sprite.Sprite):
     def __init__(self, width: int = 30, height: int = 30, color=Cfg.white):
         super().__init__()
 
-        self.engine_fire = None
+        self.ENGINE_FIRE = []
+        self.SCALED_ENGINE_FIRE = []
+        self.load_engine_effects()
+        self.transform_engine_effects()
+        self.engine_fire = self.SCALED_ENGINE_FIRE[0]
+
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
         self.rect = self.image.get_rect()
@@ -23,8 +28,6 @@ class SpaceShip(pygame.sprite.Sprite):
         self.muzzle_flash = pygame.image.load(R'C:\Users\danie\PycharmProjects\Space-shooter-game\Sprites'
                                               R'\Ship_muzzle_flash.png').convert()
         self.muzzle_flash.set_colorkey(Cfg.black)
-        "self.engine_fire = SCALED_ENGINE_FIRE[0]"
-
         self.maxhealth: int = 3
         self.health = self.maxhealth
         self.acceleration_fire: bool = False
@@ -53,6 +56,18 @@ class SpaceShip(pygame.sprite.Sprite):
         self.max_velocity_x: int = 16
         self.max_velocity_y: int = 5
 
+
+    def load_engine_effects(self) -> None:
+        " list comprehension, loading the ship fire effect "
+        self.ENGINE_FIRE = list(
+            [pygame.image.load(R'C:\Users\danie\PycharmProjects\Space-shooter-game\Sprites\jet_fire_{0}.png'
+                               .format(i)) for i in range(1, 9)])
+
+    def transform_engine_effects(self) -> None:
+        "and scales the effect"
+        for frame in self.ENGINE_FIRE:
+            self.SCALED_ENGINE_FIRE.append(pygame.transform.smoothscale(frame, (70, 60)))
+
     def transform_image(self) -> None:
         self.image = pygame.transform.smoothscale(self.image, (65, 65))
         self.rect = self.image.get_rect()
@@ -63,7 +78,7 @@ class SpaceShip(pygame.sprite.Sprite):
         self.UI_image = pygame.transform.smoothscale(self.image, (30, 30))
         self.transform_image()
 
-    def center_set_position(self, x: int, y: int) -> None:
+    def center_set_position(self, x: float, y: float) -> None:
         self.rect.x = x - self.rect.center[0]
         self.rect.y = y - self.rect.width
 
@@ -127,8 +142,8 @@ class SpaceShip(pygame.sprite.Sprite):
         Cfg.screen.blit(self.image, [self.rect.x, self.rect.y])
         if self.acceleration_fire:
             self.frame += 1
-            self.frame %= len(SCALED_ENGINE_FIRE)
-            self.engine_fire = SCALED_ENGINE_FIRE[self.frame]
+            self.frame %= len(self.SCALED_ENGINE_FIRE)
+            self.engine_fire = self.SCALED_ENGINE_FIRE[self.frame]
             Cfg.screen.blit(self.engine_fire, (self.rect.centerx - 34, self.rect.bottom))
 
     def muzzle_flash_effect(self):

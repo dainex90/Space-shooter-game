@@ -1,15 +1,14 @@
 import random
-
 import pygame
 
-from Content.Game.Effects.game_effects import EnemyProjectile
-
 # LOCAL IMPORTS
-from Content.Game.Main import main
 from Content.Game.Settings.config import Cfg
+from Content.Game.Effects.game_effects import EnemyProjectile
+from Content.Game.Main import main
 
 
 class Enemy(pygame.sprite.Sprite):
+
     all_enemies = pygame.sprite.Group()
 
     def __init__(self, speed: int, maxhealth: int, timebetweenshooting: int):

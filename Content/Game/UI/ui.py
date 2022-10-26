@@ -19,7 +19,7 @@ class EnergyBar(pygame.sprite.Sprite):
         self.overload = False
         self.cooldown = 1000
         #print(os.getcwd())  # Log this line.
-        self.overload_soundfx = pygame.mixer.Sound(R'C:\Users\danba\PycharmProjects\Space-shooter-game\sound_fx'
+        self.overload_soundfx = pygame.mixer.Sound(R'C:\Users\danie\PycharmProjects\Space-shooter-game\sound_fx'
                                                    R'\354049__pauldihor__gun-fire-for-futuristic-game.wav')
 
     def draw_bar(self):
