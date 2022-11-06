@@ -1,19 +1,18 @@
 import enum
-from logging import _Level
 from typing import Literal
 
-class LevelStates(enum):
+
+class LevelStates():
 
     def __init__(self):
         super().__init__()
 
-        self.LEVEL_1: Literal= 1
-        self.LEVEL_2: Literal = 2
-        self.LEVEL_3: Literal= 3
+        self.LEVEL_1: int = 1
+        self.LEVEL_2: int  = 2
+        self.LEVEL_3: int = 3
 
         self.ALL_LEVEL_STATES = [self.LEVEL_1, self.LEVEL_2, self.LEVEL_3]
-        self.cur_level_state: int
-
+        self.cur_level_state = None
 
     def set_level_state(self, state_to_set: int) -> None:
         # set to a new state 

@@ -7,8 +7,6 @@ import math
 import random
 import time
 
-
-
 # Local Packages
 from Content.Game.States import gamestates, levelstates
 from Content.Game.Characters import player, enemy_module
@@ -31,7 +29,7 @@ all_sprites_list = pygame.sprite.Group()
 
 player = player.SpaceShip()
 
-player.set_image(R"C:\Users\danie\PycharmProjects\Space-shooter-game\Sprites\F5S4.png")
+player.set_image(config.Cfg.get_sprite_from_path("F5S4.png"))
 player.center_set_position(config.Cfg.half_width, config.Cfg.screen_height)
 
 all_sprites_list.add(player)
@@ -83,13 +81,3 @@ elif game_state.get_state() == 2:
         quit()
 
 """ END OF MAIN!"""
-
-
-
-
-
-
-
-
-
-

@@ -39,3 +39,11 @@ class Cfg(pygame.sprite.Sprite):
     @classmethod
     def fill(cls, color: tuple = black):
         cls.screen.fill(color)
+
+    @staticmethod
+    def get_sprite_from_path(sprite: str, root: str) -> str:
+        if (root == "base"):
+            return Rf"C:\Users\danie\PycharmProjects\Space-shooter-game\Sprites\{sprite}"
+        elif (root == "fx"):
+            return Rf'C:\Users\danie\PycharmProjects\Space-shooter-game\Sprites'
+                                                            Rf'\fx\Asteroid_explosions_{0}.png'

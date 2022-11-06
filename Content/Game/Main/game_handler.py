@@ -275,9 +275,6 @@ class GameHandler(pygame.sprite.Sprite):
         cls.new_player.draw_ui()
         cls.new_player.muzzle_flash_effect()
 
-        """enemy_ship.draw()
-        enemy_ship.checkenemyposition()"""
-
         explosion.ast_exp(explosion.astPosX, explosion.astPosY, cls.new_player)
         cls.text_to_screen(text='Score: {0}'.format(cls.new_player.score), size=12, pos_x=400, pos_y=15)
         cls.text_to_screen(text='Highscore: {0}'.format(cls.new_player.highscore), size=15, color=Cfg.vegasgold, pos_y=15)

@@ -72,7 +72,6 @@ class InputBox(pygame.sprite.Sprite):
         screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
 
 
-
 """Class for creating buttons in the game"""
 class Button(InputBox, pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, text=''):

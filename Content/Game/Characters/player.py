@@ -60,7 +60,7 @@ class SpaceShip(pygame.sprite.Sprite):
     def load_engine_effects(self) -> None:
         " list comprehension, loading the ship fire effect "
         self.ENGINE_FIRE = list(
-            [pygame.image.load(R'C:\Users\danie\PycharmProjects\Space-shooter-game\Sprites\jet_fire_{0}.png'
+            [pygame.image.load(Cfg.get_sprite_from_path("jet_fire_{0}.png")
                                .format(i)) for i in range(1, 9)])
 
     def transform_engine_effects(self) -> None:
@@ -114,7 +114,7 @@ class SpaceShip(pygame.sprite.Sprite):
         if abs(self.cur_velocity_x) > self.max_velocity_x:
             self.cur_velocity_x = (self.max_velocity_x * direction)
 
-    def accelerate_ship(self,):
+    def accelerate_ship(self):
 
         if self.forward:
             self.cur_velocity_y -= self.acceleration
